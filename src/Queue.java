@@ -10,6 +10,7 @@ public class Queue<T> {
 		if(isEmpty()) head = new Node<T>(value);
 		else {
 			getNode(size-1).nextNode = new Node<T>(value);
+			getNode(size-1).nextNode.previousNode = getNode(size-1);
 		}
 		size++;
 	}
@@ -42,7 +43,7 @@ public class Queue<T> {
 		return null;
 	}
 	
-	public Node<T> getNode(int i) {
+	private Node<T> getNode(int i) {
 		if(i == 0) return head;
 		int c = 0;
 		Node<T> current = head;
