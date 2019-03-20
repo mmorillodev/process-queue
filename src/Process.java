@@ -1,5 +1,5 @@
 
-public class Process {
+public class Process implements Prioriser{
 	private String name;
 	private int priority;
 	
@@ -14,5 +14,10 @@ public class Process {
 	
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public int getPriority() {
+		return priority;
 	}
 }

@@ -1,60 +1,77 @@
 public class Queue<T> {
-	public int head;
-	public int nextEmptyPos;
-	public int absSize;
-	public T[] arr;
-	
-	@SuppressWarnings("unchecked")
-	
-	public Queue(int initialCapacity) {
-		if (initialCapacity < 0)
-            throw new IllegalArgumentException("Illegal Capacity: "+
-                                               initialCapacity);
-		
-		arr = (T[])new Object[initialCapacity];
-		head = 0;
-		nextEmptyPos = 0;
-	}
+	public Node<T> head;
+	private int size;
 	
 	public Queue() {
-		this(10);
+		
 	}
 	
 	public void add(T value) {
-		if(isFull()) return;
-		if(nextEmptyPos == arr.length);
-		arr[nextEmptyPos] = value;
-		nextEmptyPos = checkPosition(nextEmptyPos+1);
-		absSize++;
+		if(isEmpty()) head = new Node<T>(value);
+		else {
+			getNode(size-1).nextNode = new Node<T>(value);
+		}
+		size++;
 	}
 	
 	public T unQueue() {
 		if(isEmpty()) return null;
-		T value = arr[head];
-		head = checkPosition(head+1);
-		absSize--;
-		return value;
+		T v = head.value;
+		head = head.nextNode;
+		size--;
+		return v;
+	}
+	
+	
+	public Object unQueueByPriority() throws Exception {
+		if(isEmpty()) return null;
+		if(!(head.value instanceof Prioriser)) 
+			throw new Exception("Class must implement Prioriser");
+		return null;
 	}
 	
 	public T get(int i) {
-		return arr[i];
+		if(i == 0) return head.value;
+		int c = 0;
+		Node<T> current = head;
+		while(current != null) {
+			if(c == i) return current.value;
+			c++;
+			current = current.nextNode;
+		}
+		return null;
+	}
+	
+	public Node<T> getNode(int i) {
+		if(i == 0) return head;
+		int c = 0;
+		Node<T> current = head;
+		while(current != null) {
+			if(c == i) return current;
+			c++;
+			current = current.nextNode;
+		}
+		return null;
 	}
 	
 	public int size() {
-		return absSize;
+		return size;
 	}
 	
 	public boolean isEmpty() {
-		return absSize == 0;
+		return size == 0;
 	}
 	
-	public boolean isFull() {
-		return absSize == arr.length;
+	public String toString() {
+		return null;
 	}
+}
+class Node<T> {
+	public T value;
+	public Node<T> previousNode;
+	public Node<T> nextNode;
 	
-	private int checkPosition(int index) {
-		if(index < 0) return arr.length-1;
-		if(index >= arr.length) return 0;
-		else return index;
+	public Node(T value) {
+		this.value = value;
 	}
 }
