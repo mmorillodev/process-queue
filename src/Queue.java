@@ -46,7 +46,7 @@ public class Queue<T> {
 		return statement;
 	}
 	
-	public T get(int i) {
+	private T get(int i) {
 		if(i == 0) return head.value;
 		int c = 0;
 		Node<T> current = head;
@@ -58,7 +58,7 @@ public class Queue<T> {
 		return null;
 	}
 	
-	public boolean remove(T object) {
+	private boolean remove(T object) {
 		Node<T> current = head;
 		int i = 0;
 		
@@ -70,7 +70,7 @@ public class Queue<T> {
 		return false;
 	}
 	
-	public boolean remove(int index) {
+	private boolean remove(int index) {
 		boolean success = false;
 		Node<T> removed = getNode(index);
 		if(isEmpty());

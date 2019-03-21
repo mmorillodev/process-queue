@@ -4,6 +4,10 @@ public class Process implements Prioriser{
 	private String name;
 	private int priority;
 	
+	public Process(String name){
+		this.name = name;
+	}
+	
 	public Process(String name, int priority){
 		this.name = name;
 		this.priority = priority;
@@ -15,6 +19,10 @@ public class Process implements Prioriser{
 	
 	public String getName() {
 		return name;
+	}
+	
+	public void setPiority(int priority) {
+		this.priority = priority;
 	}
 	
 	public String toString() {
