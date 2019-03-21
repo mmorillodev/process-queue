@@ -1,17 +1,23 @@
 
 public class Main {
 	public static void main(String[] args) {
-		Queue<Integer> q = new Queue<>();
+		Queue<Process> q = new Queue<>();
+		Process p1 = new Process("Process 1", 0);
+		q.add(p1);
+		q.add(new Process("Process 2", 1));
+		q.add(new Process("Process 3", 0));
+		q.add(new Process("Process 4", 2));
 		
-		q.add(1);
-		q.add(2);
-		q.add(3);
-		q.add(4);
+		try {
+			System.out.println(q.unQueueByPriority().getName());
+			System.out.println(q.unQueueByPriority().getName());
+			System.out.println(q.unQueueByPriority().getName());
+			System.out.println(q.unQueueByPriority().getName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		System.out.println(q.unQueue());
-		System.out.println(q.unQueue());
-		System.out.println(q.unQueue());
-		System.out.println(q.unQueue());
-		System.out.println(q.unQueue());
+		System.out.println(q.toString());
 	}
 }
