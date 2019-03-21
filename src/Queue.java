@@ -2,7 +2,7 @@ import aux_interfaces.MyConsumer;
 import aux_interfaces.Prioriser;
 
 public class Queue<T> {
-	public Node<T> head;
+	private Node<T> head;
 	private int size;
 	
 	public Queue() {
@@ -27,10 +27,10 @@ public class Queue<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public T unQueueByPriority() throws Exception {
+	public T unQueueByPriority() {
 		if(isEmpty()) return null;
 		if(!(head.value instanceof Prioriser))
-			throw new Exception("Class must implement Prioriser");
+			throw new ClassCastException("Class must implement Prioriser");
 		
 		Prioriser maxPriority = (Prioriser) head.value;
 		Prioriser next;
@@ -93,7 +93,7 @@ public class Queue<T> {
 		return success;
 	}
 	
-	public Node<T> getNode(int i) {
+	private Node<T> getNode(int i) {
 		if(i == 0) return head;
 		int c = 0;
 		Node<T> current = head;
@@ -127,16 +127,16 @@ public class Queue<T> {
 		
 		Node<T> current = head;
 		while(current != null) {
-			str.append(current.value.toString() + (current.nextNode != null ? ", " : ""));
+			str.append(current.value.toString() + (current.nextNode != null ? "; " : ""));
 			current = current.nextNode;
 		}
 		return str.append("]").toString();
 	}
 }
 class Node<T> {
-	public T value;
-	public Node<T> previousNode;
-	public Node<T> nextNode;
+	T value;
+	Node<T> previousNode;
+	Node<T> nextNode;
 	
 	public Node(T value) {
 		this.value = value;
