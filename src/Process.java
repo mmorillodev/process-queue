@@ -1,3 +1,4 @@
+import aux_interfaces.Prioriser;
 
 public class Process implements Prioriser{
 	private String name;

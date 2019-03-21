@@ -1,3 +1,4 @@
+package aux_interfaces;
 
 
 public interface MyConsumer<T>{
