@@ -13,8 +13,7 @@ public class Queue<T> {
 	public void add(T value) {
 		Node<T> newNode = new Node<T>(value);
 		if(isEmpty()) {
-			head = newNode;
-			last = newNode;
+			head = last = newNode;
 		}
 		else {
 			last.nextNode = newNode;
