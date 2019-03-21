@@ -8,16 +8,5 @@ public class Main {
 		q.add(new Process("Process 3", 0));
 		q.add(new Process("Process 4", 2));
 		
-		try {
-			System.out.println(q.unQueueByPriority().getName());
-			System.out.println(q.unQueueByPriority().getName());
-			System.out.println(q.unQueueByPriority().getName());
-			System.out.println(q.unQueueByPriority().getName());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		System.out.println(q.toString());
 	}
 }
