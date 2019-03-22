@@ -3,7 +3,6 @@ import aux_interfaces.Prioriser;
 
 public class Queue<T> {
 	private Node<T> head;
-	private Node<T> last;
 	private int size;
 	
 	public Queue() {
@@ -11,14 +10,10 @@ public class Queue<T> {
 	}
 	
 	public void add(T value) {
-		Node<T> newNode = new Node<T>(value);
-		if(isEmpty()) {
-			head = last = newNode;
-		}
+		if(isEmpty()) head = new Node<T>(value);
 		else {
-			last.nextNode = newNode;
-			newNode.previousNode = last;
-			last = newNode;
+			getNode(size-1).nextNode = new Node<T>(value);
+			getNode(size-1).nextNode.previousNode = getNode(size-1);
 		}
 		size++;
 	}
