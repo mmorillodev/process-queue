@@ -54,13 +54,11 @@ public class Queue<T> {
 	private T get(int i) {
 		if(i == 0) return head.value;
 		int c = 0;
-		Node<T> current = head;
-		
-		while(current != null) {
+				
+		for(Node<T> current = head; current != null; current = current.nextNode, c++) {	
 			if(c == i) return current.value;
-			c++;
-			current = current.nextNode;
 		}
+		
 		return null;
 	}
 	
@@ -76,6 +74,7 @@ public class Queue<T> {
 	private boolean remove(int index) {
 		boolean success = false;
 		Node<T> removed = getNode(index);
+	
 		if(isEmpty());
 		else if(index >= size);
 		else if(index == 0) {
