@@ -8,5 +8,9 @@ public class Main {
 		q.add(new Process("Process 3", 0));
 		q.add(new Process("Process 4", 2));
 		
+		System.out.println(q.unQueueByPriority().getName());
+		System.out.println(q.unQueueByPriority().getName());
+		System.out.println(q.unQueueByPriority().getName());
+		System.out.println(q.unQueueByPriority().getName());
 	}
 }

@@ -55,6 +55,7 @@ public class Queue<T> {
 		if(i == 0) return head.value;
 		int c = 0;
 		Node<T> current = head;
+		
 		while(current != null) {
 			if(c == i) return current.value;
 			c++;
@@ -64,13 +65,10 @@ public class Queue<T> {
 	}
 	
 	private boolean remove(T object) {
-		Node<T> current = head;
 		int i = 0;
 		
-		while(current != null) {
+		for(Node<T> current = head; current != null; current = current.nextNode, i++) {
 			if(current.value == object) return remove(i);
-			current = current.nextNode;
-			i++;
 		}
 		return false;
 	}
@@ -101,11 +99,9 @@ public class Queue<T> {
 	private Node<T> getNode(int i) {
 		if(i == 0) return head;
 		int c = 0;
-		Node<T> current = head;
-		while(current != null) {
+		
+		for(Node<T> current = head; current != null; c++, current = current.nextNode) {
 			if(c == i) return current;
-			c++;
-			current = current.nextNode;
 		}
 		return null;
 	}
@@ -130,11 +126,11 @@ public class Queue<T> {
 		
 		if(isEmpty()) return str.append("]").toString();
 		
-		Node<T> current = head;
-		while(current != null) {
+		
+		for(Node<T> current = head; current != null; current = current.nextNode) {
 			str.append(current.value.toString() + (current.nextNode != null ? "; " : ""));
-			current = current.nextNode;
 		}
+		
 		return str.append("]").toString();
 	}
 }
