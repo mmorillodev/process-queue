@@ -17,6 +17,7 @@ public class Queue<T> {
 		}
 		else {
 			last.nextNode = newNode;
+			newNode.previousNode = last;
 			last = newNode;
 		}
 		size++;
