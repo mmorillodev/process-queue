@@ -35,7 +35,7 @@ public class Queue<T> {
 	public T unQueueByPriority() {
 		if(isEmpty()) return null;
 		if(!(head.value instanceof Prioriser))
-			throw new ClassCastException("Class must implement Prioriser");
+			throw new ImplementationNotFound("Class must implement Prioriser");
 		
 		Prioriser maxPriority = (Prioriser) head.value;
 		Prioriser next;
