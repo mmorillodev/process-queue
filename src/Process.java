@@ -26,8 +26,8 @@ public class Process implements Prioriser{
 	}
 	
 	public String toString() {
-		return "Process: " + name + 
-				"\nPriority: " + priority;
+		return "Name: " + name + 
+				", Priority: " + priority;
 	}
 
 //	@Override

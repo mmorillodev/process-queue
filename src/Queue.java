@@ -39,6 +39,7 @@ public class Queue<T> {
 		
 		Prioriser maxPriority = (Prioriser) head.value;
 		Prioriser next;
+		
 		for(int i = 1; i < size; i++) {
 			next = (Prioriser) get(i); 
 			if(next.getPriority() > maxPriority.getPriority()) {
