@@ -30,7 +30,7 @@ public class Process implements Prioriser{
 				"\nPriority: " + priority;
 	}
 
-	@Override
+//	@Override
 	public int getPriority() {
 		return priority;
 	}

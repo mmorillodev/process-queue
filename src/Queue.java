@@ -35,7 +35,7 @@ public class Queue<T> {
 	public T unQueueByPriority() {
 		if(isEmpty()) return null;
 		if(!(head.value instanceof Prioriser))
-			throw new ImplementationNotFoundException("Class must implement Prioriser");
+			throw new ImplementationNotFoundException(head.value.getClass() + " must implement Prioriser");
 		
 		Prioriser maxPriority = (Prioriser) head.value;
 		Prioriser next;
@@ -73,7 +73,7 @@ public class Queue<T> {
 	
 	private boolean remove(int index) {
 		boolean success = false;
-		Node<T> removed = getNode(index);
+		Node<T> removed = (index == size - 1 ? last: getNode(index));
 	
 		if(isEmpty());
 		else if(index >= size);
@@ -81,7 +81,7 @@ public class Queue<T> {
 			head = head.nextNode;
 			success = true;
 		}
-		else if(index == size-1) {
+		else if(removed == last) {
 			removed.previousNode.nextNode = null;
 			success = true;
 		}
@@ -133,6 +133,7 @@ public class Queue<T> {
 		return str.append("]").toString();
 	}
 }
+
 class Node<T> {
 	T value;
 	Node<T> previousNode;
