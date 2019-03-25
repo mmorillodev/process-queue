@@ -2,6 +2,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
+import lists.MyList;
+
 public class Process{
 	private String name;
 	private int priority;
@@ -9,8 +11,8 @@ public class Process{
 	private int[] ioArrivals;
 	private int duration, arrival;
 	
-	public Process(String filePath) throws IOException{
-		Scanner reader = new Scanner(new File(filePath));
+	public Process(File file) throws IOException{
+		Scanner reader = new Scanner(file);
 		MyList<String> fileValues = new MyList<>();
 		
 		while(reader.hasNext()) {

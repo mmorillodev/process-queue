@@ -19,13 +19,4 @@ public class Main {
 		System.out.print("Type the quantum for each process: ");
 		int quantum = quantumEntry.nextInt();		
 	}
-	
-	public void sleep(long millis) {
-		try {
-			Thread.sleep(millis);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }
