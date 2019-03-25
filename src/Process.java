@@ -76,7 +76,7 @@ public class Process{
 				", Priority: " + priority + 
 				", Arrival: " + arrival + 
 				", Duration: " + duration + 
-				", has I/O: " + hasIO + 
+				", Has I/O: " + hasIO + 
 				", I/O moments: " + arrToString();
 	}
 
