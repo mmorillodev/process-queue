@@ -1,9 +1,7 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import aux_interfaces.Prioriser;
+import java.util.Scanner;
 
 public class Process{
 	private String name;
@@ -13,15 +11,12 @@ public class Process{
 	private int duration, arrival;
 	
 	public Process(String filePath) throws IOException{
-		FileReader file = new FileReader(filePath);
-		BufferedReader buffer = new BufferedReader(file);
+		Scanner reader = new Scanner(new File(filePath));
 		ArrayList<String> fileValues = new ArrayList<>();
-		String line;
 		
-		while((line = buffer.readLine()) != null) {
-			fileValues.add(line);
+		while(reader.hasNext()) {
+			fileValues.add(reader.nextLine());
 		}
-		buffer.close();
 		
 		setName(fileValues.get(0));
 		setDuration(Integer.parseInt(fileValues.get(1)));

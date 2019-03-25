@@ -1,6 +1,3 @@
-import aux_interfaces.MyConsumer;
-import aux_interfaces.Prioriser;
-
 public class Queue<T> {
 	private Node<T> head;
 	private Node<T> last;
