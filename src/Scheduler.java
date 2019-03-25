@@ -1,5 +1,3 @@
-import interfaces.OnProcessChangeListener;
-
 public class Scheduler extends Thread{
 	private int quantum;
 	private long quantum_milis;
