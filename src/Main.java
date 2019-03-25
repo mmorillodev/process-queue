@@ -1,9 +1,12 @@
 import java.io.IOException;
 import java.util.Scanner;
 public class Main {
-	private final String basePath = "C:\\Users\\Nescara\\Documents\\";
+	private final String BASE_PATH = "C:\\Users\\Nescara\\Documents\\";
 	
 	public static void main(String[] args) throws IOException {
+		System.out.println("=============================================");
+		System.out.println("\t\tRound Robin\t\t");
+		System.out.println("=============================================");
 		new Main().deploy();
 	}
 	
