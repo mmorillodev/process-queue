@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.util.Scanner;
-import interfaces.OnProcessChangeListener;
 
 public class Main {
 	private final String BASE_PATH = "C:\\Users\\Nescara\\Documents\\";
