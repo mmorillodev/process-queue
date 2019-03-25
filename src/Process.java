@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import aux_interfaces.Prioriser;
 
-public class Process implements Prioriser{
+public class Process{
 	private String name;
 	private int priority;
 	private boolean hasIO;
@@ -85,7 +85,6 @@ public class Process implements Prioriser{
 				", I/O moments: " + arrToString();
 	}
 
-	@Override
 	public int getPriority() {
 		return priority;
 	}
