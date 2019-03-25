@@ -1,3 +1,6 @@
+import interfaces.MyConsumer;
+import interfaces.Prioriser;
+
 public class Queue<T> {
 	private Node<T> head;
 	private Node<T> last;

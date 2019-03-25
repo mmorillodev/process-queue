@@ -12,10 +12,10 @@ public class Process{
 	
 	public Process(String filePath) throws IOException{
 		Scanner reader = new Scanner(new File(filePath));
-		ArrayList<String> fileValues = new ArrayList<>();
+		MyList<String> fileValues = new MyList<>();
 		
 		while(reader.hasNext()) {
-			fileValues.add(reader.nextLine());
+			fileValues.push(reader.nextLine());
 		}
 		
 		setName(fileValues.get(0));
