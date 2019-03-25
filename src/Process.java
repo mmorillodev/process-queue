@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Process{
@@ -27,6 +26,7 @@ public class Process{
 		}
 		else
 			ioArrivals = new int[0];
+		reader.close();
 	}
 	
 	public void hasIO(boolean hasIO) {
