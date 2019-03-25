@@ -20,9 +20,9 @@ public class Main {
 		int quantum = quantumEntry.nextInt();		
 
 		Scheduler manager = new Scheduler(readyQueue, quantum, QUANTUM_MILIS);
-		manager.setOnProcessChangeListener(new onProcessChangeListener(){
+		manager.setOnProcessChangeListener(new OnProcessChangeListener(){
 			@Override
-			public void OnChange(Process newProcess){
+			public void onChange(Process newProcess){
 				println("=======New process entry.========");
 				println(newProcess.toString());
 			}
