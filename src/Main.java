@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.util.Scanner;
+import interfaces.OnProcessChangeListener;
+
 public class Main {
 	private final String BASE_PATH = "C:\\Users\\Nescara\\Documents\\";
 	public final long QUANTUM_MILIS = 3500;
@@ -12,12 +14,21 @@ public class Main {
 	}
 	
 	public void deploy() {
-		Queue<Process> wait = new Queue<>();
-		Queue<Process> ready = new Queue<>();
+		Queue<Process> readyQueue = new Queue<>();
 		Scanner quantumEntry = new Scanner(System.in);
 		
 		print("Type the quantum for each process: ");
 		int quantum = quantumEntry.nextInt();		
+
+		Scheduler manager = new Scheduler(readyQueue, quantum, QUANTUM_MILIS);
+		manager.setOnProcessChangeListener(new OnProcessChangeListener(){
+			@Override
+			public void OnChange(Process newProcess){
+				println("=======New process entry.========");
+				println(newProcess.toString());
+			}
+		});
+		manager.start();
 	}
 	
 	public static void print(String str) {System.out.print(str);}
