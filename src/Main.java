@@ -5,9 +5,9 @@ public class Main {
 	public final long QUANTUM_MILIS = 3500;
 	
 	public static void main(String[] args) throws IOException {
-		System.out.println("=============================================");
-		System.out.println("\t\tRound Robin\t\t");
-		System.out.println("=============================================");
+		println("=============================================");
+		println("\t\tRound Robin\t\t");
+		println("=============================================");
 		new Main().deploy();
 	}
 	
@@ -16,7 +16,10 @@ public class Main {
 		Queue<Process> ready = new Queue<>();
 		Scanner quantumEntry = new Scanner(System.in);
 		
-		System.out.print("Type the quantum for each process: ");
+		print("Type the quantum for each process: ");
 		int quantum = quantumEntry.nextInt();		
 	}
+	
+	public static void print(String str) {System.out.print(str);}
+	public static void println(String str) {System.out.println(str);}
 }
