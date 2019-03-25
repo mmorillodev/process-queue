@@ -5,8 +5,10 @@ public class Scheduler extends Thread{
 	private long quantum_milis;
 	private OnProcessChangeListener callback;
 	private Runnable onDeployThreadListener;
+	private Queue<Process> queue;
 	
-	public Scheduler(int quantum, long quantum_milis) {
+	public Scheduler(Queue<Process> queue, int quantum, long quantum_milis) {
+		this.queue = queue;
 		this.quantum = quantum;
 		this.quantum_milis = quantum_milis;
 	}
