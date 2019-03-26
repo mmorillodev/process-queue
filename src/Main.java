@@ -14,12 +14,12 @@ public class Main {
 	
 	public void deploy() {
 		Queue<Process> readyQueue = new Queue<>();
-		Scanner quantumEntry = new Scanner(System.in);
 		
 		print("Type the quantum for each process: ");
-		int quantum = quantumEntry.nextInt();		
+		int quantum = new Scanner(System.in).nextInt();		
 
 		Scheduler manager = new Scheduler(readyQueue, quantum, QUANTUM_MILIS);
+		
 		manager.setOnProcessChangeListener(new OnProcessChangeListener(){
 			@Override
 			public void onChange(Process newProcess){
