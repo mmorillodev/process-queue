@@ -3,6 +3,7 @@ package br.com.aps_so.lists;
 import br.com.aps_so.interfaces.MyConsumer;
 import br.com.aps_so.interfaces.Prioriser;
 import br.com.aps_so.exceptions.ImplementationNotFoundException;
+import br.com.aps_so.lists.Node;
 
 public class Queue<T> {
 	private Node<T> head;
@@ -28,7 +29,7 @@ public class Queue<T> {
 	
 	public T unQueue() {
 		if(isEmpty()) return null;
-		T v = head.value;
+		T v = head.data;
 		head = head.nextNode;
 		size--;
 		return v;
@@ -37,10 +38,10 @@ public class Queue<T> {
 	@SuppressWarnings("unchecked")
 	public T unQueueByPriority() {
 		if(isEmpty()) return null;
-		if(!(head.value instanceof Prioriser))
-			throw new ImplementationNotFoundException(head.value.getClass() + " must implement Prioriser");
+		if(!(head.data instanceof Prioriser))
+			throw new ImplementationNotFoundException(head.data.getClass() + " must implement Prioriser");
 		
-		Prioriser maxPriority = (Prioriser) head.value;
+		Prioriser maxPriority = (Prioriser) head.data;
 		Prioriser next;
 		
 		for(int i = 1; i < size; i++) {
@@ -56,11 +57,11 @@ public class Queue<T> {
 	}
 	
 	private T get(int i) {
-		if(i == 0) return head.value;
+		if(i == 0) return head.data;
 		int c = 0;
 				
 		for(Node<T> current = head; current != null; current = current.nextNode, c++) {	
-			if(c == i) return current.value;
+			if(c == i) return current.data;
 		}
 		
 		return null;
@@ -70,7 +71,7 @@ public class Queue<T> {
 		int i = 0;
 		
 		for(Node<T> current = head; current != null; current = current.nextNode, i++) {
-			if(current.value == object) return remove(i);
+			if(current.data == object) return remove(i);
 		}
 		return false;
 	}
@@ -131,19 +132,9 @@ public class Queue<T> {
 		
 		
 		for(Node<T> current = head; current != null; current = current.nextNode) {
-			str.append(current.value.toString() + (current.nextNode != null ? "; " : ""));
+			str.append(current.data.toString() + (current.nextNode != null ? "; " : ""));
 		}
 		
 		return str.append("]").toString();
-	}
-}
-
-class Node<T> {
-	T value;
-	Node<T> previousNode;
-	Node<T> nextNode;
-	
-	public Node(T value) {
-		this.value = value;
 	}
 }
