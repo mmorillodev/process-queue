@@ -1,5 +1,6 @@
 package br.com.aps_so.lists;
 
+import br.com.aps_so.interfaces.MyComparator;
 import br.com.aps_so.interfaces.MyConsumer;
 import br.com.aps_so.interfaces.Prioriser;
 import br.com.aps_so.exceptions.ImplementationNotFoundException;
@@ -110,6 +111,17 @@ public class Queue<T> {
 		return null;
 	}
 	
+	public void sort(MyComparator<T> comparator) {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if(i == j) continue;
+				else if(comparator.compare(get(i), get(j)) < 0){
+					swapItems(i, j);
+				}
+			}
+		}
+	}
+	
 	public int size() {
 		return size;
 	}
@@ -136,5 +148,14 @@ public class Queue<T> {
 		}
 		
 		return str.append("]").toString();
+	}
+	
+	public void swapItems(int firstIndex, int secondIndex) {
+		if(firstIndex >= size || secondIndex >= size) return;
+		if(firstIndex == secondIndex) return;
+		
+		T data = get(firstIndex);
+		getNode(firstIndex).data = getNode(secondIndex).data;
+		getNode(secondIndex).data = data;
 	}
 }
