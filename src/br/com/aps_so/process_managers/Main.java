@@ -9,7 +9,7 @@ import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 import br.com.aps_so.interfaces.OnProcessChangeListener;
 
-public class Main {
+public class Main implements OnProcessChangeListener{
 	private final String BASE_PATH = "C:\\Users\\mathe\\Documents\\";
 	private final long QUANTUM_MILIS = 3500;
 	public Queue<Process> readyQueue;
@@ -24,6 +24,7 @@ public class Main {
 	public void deploy() throws FileNotFoundException {
 		Scanner scanner = new Scanner(System.in);
 		readyQueue = new Queue<>();
+		
 		getFileInfo(new File(BASE_PATH + "\\processes.txt"));
 		
 		print("Type the quantum for each process: ");
@@ -32,17 +33,11 @@ public class Main {
 
 		Scheduler manager = new Scheduler(readyQueue, quantum, QUANTUM_MILIS);
 		
-		manager.setOnProcessChangeListener(new OnProcessChangeListener(){
-			@Override
-			public void onChange(Process newProcess){
-				println("=======New process entry.========");
-				println(newProcess.toString());
-			}
-		});
+		manager.setOnProcessChangeListener(this);
 		manager.start();
 	}
 	
-	public Queue<Process> getFileInfo(File file) throws FileNotFoundException {
+	public void getFileInfo(File file) throws FileNotFoundException {
 		Scanner fileDatas = new Scanner(file);
 		MyList<String> aux = new MyList<>();
 		
@@ -56,10 +51,17 @@ public class Main {
 			}
 			aux.push(aux_);
 		}
-		
-		return readyQueue;
+		fileDatas.close();
+	}
+	
+	@Override
+	public void onChange(Process newProcess) {
+		println("=======New process entry.========");
+		println(newProcess.toString());
 	}
 	
 	public static void print(String str) {System.out.print(str);}
 	public static void println(String str) {System.out.println(str);}
+
+	
 }
