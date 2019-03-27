@@ -7,7 +7,7 @@ public class Scheduler extends Thread{
 	private int quantum;
 	private long quantum_milis;
 	private OnProcessChangeListener onChangeCallback;
-	private Runnable onDeployThreadListener;
+	private Runnable onDeployThreadListener;sadsadsad
 	private Queue<Process> queue;
 	
 	public Scheduler(Queue<Process> queue, int quantum, long quantum_milis) {
