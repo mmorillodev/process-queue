@@ -1,9 +1,5 @@
 package br.com.aps_so.process_managers;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
-
 import  br.com.aps_so.lists.*;
 
 public class Process{

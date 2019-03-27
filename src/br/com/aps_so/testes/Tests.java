@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import br.com.aps_so.lists.*;
-import br.com.aps_so.process_managers.Main;
 import br.com.aps_so.process_managers.Process;
 
 public class Tests {
@@ -31,7 +30,7 @@ public class Tests {
 			}
 			aux.push(aux_);
 		}
-		
+		fileDatas.close();
 		return readyQueue;
 	}
 }

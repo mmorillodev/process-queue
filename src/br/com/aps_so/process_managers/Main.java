@@ -10,7 +10,7 @@ import br.com.aps_so.lists.Queue;
 import br.com.aps_so.interfaces.OnProcessChangeListener;
 
 public class Main implements OnProcessChangeListener{
-	private final String BASE_PATH = "C:\\Users\\mathe\\Documents\\";
+	private final String BASE_PATH = "C:\\Users\\Nescara\\Documents\\";
 	private final long QUANTUM_MILIS = 3500;
 	public Queue<Process> readyQueue;
 	
@@ -18,7 +18,12 @@ public class Main implements OnProcessChangeListener{
 		println("=============================================");
 		println("\t\tRound Robin\t\t");
 		println("=============================================");
-		new Main().deploy();
+		try {
+			new Main().deploy();
+		} catch(FileNotFoundException e) {
+			print("File not found");
+		}
+		
 	}
 	
 	public void deploy() throws FileNotFoundException {
@@ -56,12 +61,14 @@ public class Main implements OnProcessChangeListener{
 	
 	@Override
 	public void onChange(Process newProcess) {
+		println();
 		println("=======New process entry.========");
 		println(newProcess.toString());
 	}
 	
 	public static void print(String str) {System.out.print(str);}
 	public static void println(String str) {System.out.println(str);}
+	public static void println() {System.out.println();}
 
 	
 }

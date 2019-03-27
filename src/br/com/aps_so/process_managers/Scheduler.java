@@ -30,6 +30,8 @@ public class Scheduler extends Thread{
 			onDeployThreadListener.run();
 			return;
 		}
-		
+		for(int i = 0; i < queue.size(); i++) {
+			onChangeCallback.onChange(queue.get(i));
+		}
 	}
 }

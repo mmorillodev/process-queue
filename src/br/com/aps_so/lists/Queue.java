@@ -57,7 +57,7 @@ public class Queue<T> {
 		return statement;
 	}
 	
-	private T get(int i) {
+	public T get(int i) {
 		if(i == 0) return head.data;
 		int c = 0;
 				
