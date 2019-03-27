@@ -13,14 +13,7 @@ public class Process{
 	private int[] ioArrivals;
 	private int duration, arrival;
 	
-	public Process(File file) throws IOException{
-		Scanner reader = new Scanner(file);
-		MyList<String> fileValues = new MyList<>();
-		
-		while(reader.hasNext()) {
-			fileValues.push(reader.nextLine());
-		}
-		
+	public Process(MyList<String> fileValues) {
 		setName(fileValues.get(0));
 		setDuration(Integer.parseInt(fileValues.get(1)));
 		setArrival(Integer.parseInt(fileValues.get(2)));
@@ -30,7 +23,6 @@ public class Process{
 		}
 		else
 			ioArrivals = new int[0];
-		reader.close();
 	}
 	
 	public void hasIO(boolean hasIO) {

@@ -1,36 +1,37 @@
 package br.com.aps_so.testes;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 import br.com.aps_so.lists.*;
+import br.com.aps_so.process_managers.Main;
+import br.com.aps_so.process_managers.Process;
 
 public class Tests {
-	public static void main(String[] args) {
-		Queue<Integer> queue = new Queue<>();
-		MyLinkedList<Integer> mLinked = new MyLinkedList<>();
-		MyList<Integer> mList = new MyList<>();
+	public static void main(String[] args) throws FileNotFoundException {
+		Queue<Process> queue = getFileInfo(new File("C:\\Users\\mathe\\Documents\\processes.txt"));
+		queue.forEach(System.out::println);
+		System.out.println(queue.size());
 		
-		queue.add(1);
-		queue.add(2);
-		queue.add(4);
-		queue.add(5);
+	}
+	
+	public static Queue<Process> getFileInfo(File file) throws FileNotFoundException {
+		Scanner fileDatas = new Scanner(file);
+		MyList<String> aux = new MyList<>();
+		Queue<Process> readyQueue = new Queue<>();
 		
-		mLinked.add(1);
-		mLinked.add(2);
-		mLinked.add(3);
-		mLinked.add(4);
-		
-		
-		mList.push(1);
-		mList.push(2);
-		mList.push(3);
-		mList.push(4);
-		
-		for(int i = 0; i < 4; i++) {
-			System.out.println("---------------");
-			System.out.println(queue.unQueue());
-			System.out.println("---------------");
-			System.out.println(mLinked.pop());
-			System.out.println("---------------");
-			System.out.println(mList.get(i));
+		while(fileDatas.hasNext()) {
+			String aux_ = fileDatas.nextLine();
+			if(aux_.equals("") || !fileDatas.hasNext()) {
+				if(!fileDatas.hasNext()) aux.push(aux_);
+				readyQueue.add(new Process(aux));
+				aux.clear();
+				continue;
+			}
+			aux.push(aux_);
 		}
+		
+		return readyQueue;
 	}
 }
