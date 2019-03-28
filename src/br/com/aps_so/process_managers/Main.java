@@ -21,7 +21,7 @@ public class Main implements OnProcessChangeListener{
 		try {
 			new Main().deploy();
 		} catch(FileNotFoundException e) {
-			print("File not found");
+			print("File not found: " + e.getMessage());
 		}
 		
 	}
@@ -44,17 +44,17 @@ public class Main implements OnProcessChangeListener{
 	
 	public void getFileInfo(File file) throws FileNotFoundException {
 		Scanner fileDatas = new Scanner(file);
-		MyList<String> aux = new MyList<>();
+		MyList<String> currentProcess = new MyList<>();
 		
 		while(fileDatas.hasNext()) {
-			String aux_ = fileDatas.nextLine();
-			if(aux_.equals("") || !fileDatas.hasNext()) {
-				if(!fileDatas.hasNext()) aux.push(aux_);
-				readyQueue.add(new Process(aux));
-				aux.clear();
+			String line = fileDatas.nextLine();
+			if(line.equals("") || !fileDatas.hasNext()) {
+				if(!fileDatas.hasNext()) currentProcess.push(line);
+				readyQueue.add(new Process(currentProcess));
+				currentProcess.clear();
 				continue;
 			}
-			aux.push(aux_);
+			currentProcess.push(line);
 		}
 		fileDatas.close();
 	}
