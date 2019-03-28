@@ -12,12 +12,12 @@ import br.com.aps_so.interfaces.OnProcessChangeListener;
 public class Main implements OnProcessChangeListener{
 	private final String BASE_PATH = "C:\\Users\\Nescara\\Documents\\";
 	private final long QUANTUM_MILIS = 3500;
-	public Queue<Process> readyQueue;
+	private Queue<Process> readyQueue;
 	
 	public static void main(String[] args) throws IOException {
-		println("=============================================");
-		println("\t\tRound Robin\t\t");
-		println("=============================================");
+		println("===============================================================================");
+		println("\t\t\t\tRound Robin");
+		println("===============================================================================");
 		try {
 			new Main().deploy();
 		} catch(FileNotFoundException e) {
@@ -62,7 +62,7 @@ public class Main implements OnProcessChangeListener{
 	@Override
 	public void onChange(Process newProcess) {
 		println();
-		println("=======New process entry.========");
+		println("====================== New process entry ======================");
 		println(newProcess.toString());
 	}
 	
