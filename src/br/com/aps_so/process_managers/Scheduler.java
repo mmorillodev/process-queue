@@ -5,15 +5,15 @@ import br.com.aps_so.lists.Queue;
 
 public class Scheduler extends Thread{
 	private int quantum;
-	private long quantum_milis;
+	private long quantumMilis;
 	private OnProcessChangeListener onChangeCallback;
 	private Runnable onDeployThreadListener;
 	private Queue<Process> queue;
 	
-	public Scheduler(Queue<Process> queue, int quantum, long quantum_milis) {
+	public Scheduler(Queue<Process> queue, int quantum, long quantumMilis) {
 		this.queue = queue;
 		this.quantum = quantum;
-		this.quantum_milis = quantum_milis;
+		this.quantumMilis = quantumMilis;
 	}
 	
 	public void setOnProcessChangeListener(OnProcessChangeListener onChangeCallback) {
@@ -30,8 +30,18 @@ public class Scheduler extends Thread{
 			onDeployThreadListener.run();
 			return;
 		}
+		
 		for(Process current = queue.unQueue(); current != null; current = queue.unQueue()) {
+			delay(quantumMilis);
 			onChangeCallback.onChange(current);
+		}
+	}
+	
+	private void delay(long timeMilis) {
+		try {
+			sleep(timeMilis);
+		} catch(InterruptedException e) {
+			delay(timeMilis);
 		}
 	}
 }

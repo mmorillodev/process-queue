@@ -9,15 +9,15 @@ import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 import br.com.aps_so.interfaces.OnProcessChangeListener;
 
-public class Main implements OnProcessChangeListener{
+public class Main implements OnProcessChangeListener {
 	private final String BASE_PATH = "C:\\Users\\Nescara\\Documents\\";
-	private final long QUANTUM_MILIS = 3500;
+	private final long QUANTUM_MILIS = 1000;
 	private Queue<Process> readyQueue;
 	
 	public static void main(String[] args) throws IOException {
-		println("===============================================================================");
+		println("===============================================================================\n");
 		println("\t\t\t\tRound Robin");
-		println("===============================================================================");
+		println("\n===============================================================================");
 		try {
 			new Main().deploy();
 		} catch(FileNotFoundException e) {
@@ -31,8 +31,8 @@ public class Main implements OnProcessChangeListener{
 		readyQueue = new Queue<>();
 		
 		getFileInfo(new File(BASE_PATH + "\\processes.txt"));
-		
-		print("Type the quantum for each process: ");
+		 
+		print("\nType the quantum for each process: ");
 		int quantum = scanner.nextInt();
 		scanner.close();
 
@@ -62,13 +62,11 @@ public class Main implements OnProcessChangeListener{
 	@Override
 	public void onChange(Process newProcess) {
 		println();
-		println("====================== New process entry ======================");
+		println("============================== New process entry ==============================\n");
 		println(newProcess.toString());
 	}
 	
 	public static void print(String str) {System.out.print(str);}
 	public static void println(String str) {System.out.println(str);}
 	public static void println() {System.out.println();}
-
-	
 }
