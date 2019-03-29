@@ -15,6 +15,12 @@ public class Queue<T> {
 		
 	}
 	
+	public Queue(T[] arr) {
+		for(int i = 0; i < arr.length; i++) {
+			add(arr[i]);
+		}
+	}
+	
 	public void add(T value) {
 		Node<T> newNode = new Node<T>(value);
 		if(isEmpty()) {

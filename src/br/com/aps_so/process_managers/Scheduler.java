@@ -7,8 +7,7 @@ import br.com.aps_so.interfaces.OnProcessChangeListener;
 import br.com.aps_so.lists.Queue;
 
 public class Scheduler extends Thread implements MyComparator<Process>{
-	private int quantum;
-	private int currentQuantum;
+	private int quantum4process;
 	private long quantumMilis;
 	private OnProcessChangeListener onChangeCallback;
 	private Runnable onDeployThreadListener;
@@ -16,7 +15,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 	
 	public Scheduler(Queue<Process> queue, int quantum, long quantumMilis) {
 		this.queue = queue;
-		this.quantum = quantum;
+		this.quantum4process = quantum;
 		this.quantumMilis = quantumMilis;
 	}
 	
@@ -39,28 +38,37 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		
 		Scanner io = new Scanner(System.in);
 		boolean first = true;
+		int currentQuantum = 0;
+		int quantumAux = 1;
+		
 		for(Process current = queue.unQueue(); !queue.isEmpty(); current = queue.unQueue()) {
 			onChangeCallback.onChange(current);
-			while(currentQuantum % quantum != 0 || first) {
+			quantumAux = 0;
+			currentQuantum++;
+			first = true;
+			
+			while(currentQuantum % quantum4process != 0 || first) {
 				System.out.println(currentQuantum);
-				if(current.hasIO()) {
+				if(current.getArrival() < currentQuantum);
+				if(quantumAux >= current.getDuration()) {
+					current.setDuration(current.getDuration()-quantum4process);
+					System.out.println(current.getDuration());
+					break;
+				}
+				else if(current.hasIO() && !current.getIOIntervals().isEmpty()) {
 					if(current.getIOIntervals().get(0) == currentQuantum) {
-						final Process current_ = current;
-						new Thread(new Runnable() {
-							@Override
-							public void run() {
-								io.next();
-								current_.getIOIntervals().remove(0);
-							}
-						}).start();
+						current.getIOIntervals().unQueue();
+						queue.add(current);
 					}
 				}
 				first = false;
 				delay(quantumMilis);
+				quantumAux++;
 				currentQuantum++;
 			}
 			
 		}
+		io.close();
 	}
 	
 	@Override

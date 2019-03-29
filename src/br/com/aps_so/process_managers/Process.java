@@ -6,7 +6,7 @@ public class Process{
 	private String name;
 	private int priority;
 	private boolean hasIO;
-	private MyList<Integer> ioArrivals;
+	private Queue<Integer> ioArrivals;
 	private int duration, arrival;
 	
 	public Process(MyList<String> fileValues) {
@@ -18,7 +18,7 @@ public class Process{
 			setIOIntervals(toIntArray(fileValues.get(4).split(" ")));
 		}
 		else
-			ioArrivals = new MyList<>();
+			ioArrivals = new Queue<>();
 	}
 	
 	public Process(String name, int priority){
@@ -44,10 +44,10 @@ public class Process{
 	
 	public void setIOIntervals(Integer[] intervals) {
 		if(hasIO)
-			this.ioArrivals = new MyList<>(intervals);
+			this.ioArrivals = new Queue<>(intervals);
 	}
 	
-	public MyList<Integer> getIOIntervals() {
+	public Queue<Integer> getIOIntervals() {
 		return ioArrivals;
 	}
 	
@@ -55,7 +55,7 @@ public class Process{
 		this.duration = duration;
 	}
 	
-	public double getDuration() {
+	public int getDuration() {
 		return duration;
 	}
 	
@@ -87,8 +87,8 @@ public class Process{
 	private String arrToString() {
 		StringBuffer str = new StringBuffer();
 		str.append("[");
-		for(int i = 0; i < ioArrivals.length(); i++) {
-			str.append(ioArrivals.get(i) + (i == ioArrivals.length()-1 ? "" : ", "));
+		for(int i = 0; i < ioArrivals.size(); i++) {
+			str.append(ioArrivals.get(i) + (i == ioArrivals.size()-1 ? "" : ", "));
 		}
 		return str.append("]").toString();
 	}
