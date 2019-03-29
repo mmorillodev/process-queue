@@ -39,26 +39,31 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		Scanner io = new Scanner(System.in);
 		boolean first = true;
 		int currentQuantum = 0;
-		int quantumAux = 1;
+		int quantumAux;
 		
-		for(Process current = queue.unQueue(); !queue.isEmpty(); current = queue.unQueue()) {
+		for(Process current = queue.unQueue(); current != null; current = queue.unQueue()) {
 			onChangeCallback.onChange(current);
 			quantumAux = 0;
-			currentQuantum++;
 			first = true;
 			
 			while(currentQuantum % quantum4process != 0 || first) {
-				System.out.println(currentQuantum);
-				if(current.getArrival() < currentQuantum);
-				if(quantumAux >= current.getDuration()) {
-					current.setDuration(current.getDuration()-quantum4process);
-					System.out.println(current.getDuration());
-					break;
-				}
-				else if(current.hasIO() && !current.getIOIntervals().isEmpty()) {
-					if(current.getIOIntervals().get(0) == currentQuantum) {
-						current.getIOIntervals().unQueue();
-						queue.add(current);
+				System.out.println(currentQuantum + " " + quantumAux);
+				if(current.getArrival() <= currentQuantum) {
+					if(quantumAux > current.getDuration()) {
+						current.setDuration(current.getDuration()-quantum4process);
+						System.out.println(current.getDuration());
+						delay(quantumMilis);
+						currentQuantum++;
+						break;
+					}
+					if(current.hasIO() && !current.getIOIntervals().isEmpty()) {
+						if(current.getIOIntervals().get(0) == currentQuantum) {
+							current.getIOIntervals().unQueue();
+							queue.add(current);
+							delay(quantumMilis);
+							currentQuantum++;
+							break;
+						}
 					}
 				}
 				first = false;

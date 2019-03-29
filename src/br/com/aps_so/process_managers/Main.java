@@ -11,7 +11,7 @@ import br.com.aps_so.interfaces.OnProcessChangeListener;
 
 public class Main implements OnProcessChangeListener {
 	private final String BASE_PATH = "C:\\Users\\Nescara\\Documents\\";
-	private final long QUANTUM_MILIS = 500;
+	private final long QUANTUM_MILIS = 300;
 	private Queue<Process> readyQueue;
 	
 	public static void main(String[] args) throws IOException {
@@ -35,7 +35,7 @@ public class Main implements OnProcessChangeListener {
 		print("\nType the quantum for each process: ");
 		int quantum = scanner.nextInt();
 		scanner.close();
-
+		
 		Scheduler manager = new Scheduler(readyQueue, quantum, QUANTUM_MILIS);
 		
 		manager.setOnProcessChangeListener(this);

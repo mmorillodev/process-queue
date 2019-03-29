@@ -73,7 +73,6 @@ public class Process{
 	
 	public String toString() {
 		return "Name: " + name + 
-				", Priority: " + priority + 
 				", Arrival: " + arrival + 
 				", Duration: " + duration + 
 				", Has I/O: " + hasIO + 
