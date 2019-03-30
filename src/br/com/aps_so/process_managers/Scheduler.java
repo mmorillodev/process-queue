@@ -39,14 +39,14 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 			while(currentQuantum != current.getDuration()) {
 				delay(quantumMilis);
 				totalQuantum++;
-				System.out.println("Time " + totalQuantum);
+				System.out.println("Time " + totalQuantum + " current time " + currentQuantum);
 				
 				if(quantum4process == currentQuantum) {
 					current.setDuration(current.getDuration() - currentQuantum);
 					readyQueue.add(current);
 					break;
 				}
-				else if(current.getArrival() <= totalQuantum) {
+				if(current.getArrival() <= totalQuantum) {
 					System.out.println(current.toString());
 					currentQuantum++;
 				}
