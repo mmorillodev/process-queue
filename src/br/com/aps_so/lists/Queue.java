@@ -74,6 +74,22 @@ public class Queue<T> {
 		return null;
 	}
 	
+	public int get(T obj) {
+		int c = 0;
+		for(Node<T> current = head; current != null; current = current.nextNode, c++) {	
+			if(current.data == obj) return c;
+		}
+		return -1;
+	}
+	
+	public T getLast() {
+		return last.data;
+	}
+	
+	public T getFirst() {
+		return head.data;
+	}
+	
 	private boolean remove(T object) {
 		int i = 0;
 		

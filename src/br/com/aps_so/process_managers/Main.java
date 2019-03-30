@@ -11,7 +11,7 @@ import br.com.aps_so.interfaces.OnProcessChangeListener;
 
 public class Main {
 	private final String BASE_PATH = "C:\\Users\\mathe\\Documents\\";
-	private final long QUANTUM_MILIS = 300;
+	private final long QUANTUM_MILIS = 1000;
 	private Queue<Process> readyQueue;
 	
 	public static void main(String[] args) throws IOException {

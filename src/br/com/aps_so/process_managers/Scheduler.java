@@ -29,27 +29,19 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		
 		readyQueue.sort(this);
 		
-		int totalQuantum = -1;
+		int totalQuantum = 0;
 		int currentQuantum;
+		Process currentProcess;
 		
-		for(Process current = readyQueue.unQueue(); current != null; current = readyQueue.unQueue()) {
-//			onChangeCallback.onChange(current);
+		while(!readyQueue.isEmpty()) {
+			System.out.println("Time " + totalQuantum);
+			currentProcess = readyQueue.getFirst();
 			currentQuantum = 0;
-		
-			while(currentQuantum != current.getDuration()) {
-				delay(quantumMilis);
-				totalQuantum++;
-				System.out.println("Time " + totalQuantum + " current time " + currentQuantum);
-				
-				if(quantum4process == currentQuantum) {
-					current.setDuration(current.getDuration() - currentQuantum);
-					readyQueue.add(current);
-					break;
-				}
-				if(current.getArrival() <= totalQuantum) {
-					System.out.println(current.toString());
-					currentQuantum++;
-				}
+			if(currentProcess.getDuration() == 0) {
+				readyQueue.unQueue();
+			}
+			if(currentProcess.getArrival() <= currentQuantum) {
+				System.out.println("-> " + currentProcess.getName());
 			}
 		}
 	}
