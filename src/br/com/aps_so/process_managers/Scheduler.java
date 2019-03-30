@@ -1,26 +1,19 @@
 package br.com.aps_so.process_managers;
 
-import java.util.Scanner;
-
 import br.com.aps_so.interfaces.MyComparator;
-import br.com.aps_so.interfaces.OnProcessChangeListener;
 import br.com.aps_so.lists.Queue;
 
 public class Scheduler extends Thread implements MyComparator<Process>{
 	private int quantum4process;
 	private long quantumMilis;
-	private OnProcessChangeListener onChangeCallback;
 	private Runnable onDeployThreadListener;
-	private Queue<Process> queue;
+	private Queue<Process> readyQueue;
+	private Queue<Process> ioQueue;
 	
 	public Scheduler(Queue<Process> queue, int quantum, long quantumMilis) {
-		this.queue = queue;
+		this.readyQueue = queue;
 		this.quantum4process = quantum;
 		this.quantumMilis = quantumMilis;
-	}
-	
-	public void setOnProcessChangeListener(OnProcessChangeListener onChangeCallback) {
-		this.onChangeCallback = onChangeCallback;
 	}
 	
 	public void setOnDeployThreadListener(Runnable runnable) {
@@ -34,46 +27,31 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 			return;	
 		}
 		
-		queue.sort(this);
+		readyQueue.sort(this);
 		
-		Scanner io = new Scanner(System.in);
-		boolean first = true;
-		int currentQuantum = 0;
-		int quantumAux;
+		int totalQuantum = -1;
+		int currentQuantum;
 		
-		for(Process current = queue.unQueue(); current != null; current = queue.unQueue()) {
-			onChangeCallback.onChange(current);
-			quantumAux = 0;
-			first = true;
-			
-			while(currentQuantum % quantum4process != 0 || first) {
-				System.out.println(currentQuantum + " " + quantumAux);
-				if(current.getArrival() <= currentQuantum) {
-					if(quantumAux > current.getDuration()) {
-						current.setDuration(current.getDuration()-quantum4process);
-						System.out.println(current.getDuration());
-						delay(quantumMilis);
-						currentQuantum++;
-						break;
-					}
-					if(current.hasIO() && !current.getIOIntervals().isEmpty()) {
-						if(current.getIOIntervals().get(0) == currentQuantum) {
-							current.getIOIntervals().unQueue();
-							queue.add(current);
-							delay(quantumMilis);
-							currentQuantum++;
-							break;
-						}
-					}
-				}
-				first = false;
+		for(Process current = readyQueue.unQueue(); current != null; current = readyQueue.unQueue()) {
+//			onChangeCallback.onChange(current);
+			currentQuantum = 0;
+		
+			while(currentQuantum != current.getDuration()) {
 				delay(quantumMilis);
-				quantumAux++;
-				currentQuantum++;
+				totalQuantum++;
+				System.out.println("Time " + totalQuantum);
+				
+				if(quantum4process == currentQuantum) {
+					current.setDuration(current.getDuration() - currentQuantum);
+					readyQueue.add(current);
+					break;
+				}
+				else if(current.getArrival() <= totalQuantum) {
+					System.out.println(current.toString());
+					currentQuantum++;
+				}
 			}
-			
 		}
-		io.close();
 	}
 	
 	@Override

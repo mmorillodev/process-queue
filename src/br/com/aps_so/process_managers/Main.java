@@ -9,8 +9,8 @@ import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 import br.com.aps_so.interfaces.OnProcessChangeListener;
 
-public class Main implements OnProcessChangeListener {
-	private final String BASE_PATH = "C:\\Users\\Nescara\\Documents\\";
+public class Main {
+	private final String BASE_PATH = "C:\\Users\\mathe\\Documents\\";
 	private final long QUANTUM_MILIS = 300;
 	private Queue<Process> readyQueue;
 	
@@ -38,7 +38,6 @@ public class Main implements OnProcessChangeListener {
 		
 		Scheduler manager = new Scheduler(readyQueue, quantum, QUANTUM_MILIS);
 		
-		manager.setOnProcessChangeListener(this);
 		manager.start();
 	}
 	
@@ -57,13 +56,6 @@ public class Main implements OnProcessChangeListener {
 			currentProcess.push(line);
 		}
 		fileDatas.close();
-	}
-	
-	@Override
-	public void onChange(Process newProcess) {
-		println();
-		println("============================== New process entry ==============================\n");
-		println(newProcess.toString());
 	}
 	
 	public static void print(String str) {System.out.print(str);}
