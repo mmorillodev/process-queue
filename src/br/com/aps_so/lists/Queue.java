@@ -2,6 +2,7 @@ package br.com.aps_so.lists;
 
 import br.com.aps_so.interfaces.MyComparator;
 import br.com.aps_so.interfaces.MyConsumer;
+import br.com.aps_so.interfaces.MyPredicate;
 import br.com.aps_so.interfaces.Prioriser;
 import br.com.aps_so.exceptions.ImplementationNotFoundException;
 import br.com.aps_so.lists.Node;
@@ -35,7 +36,7 @@ public class Queue<T> {
 	}
 	
 	public boolean addIfNotExist(T value) {
-		if(get(value) < 0) {
+		if(!contains(value)) {
 			add(value);
 			return true;
 		}
@@ -90,6 +91,13 @@ public class Queue<T> {
 		return -1;
 	}
 	
+	public boolean contains(T object) {
+		for(Node<T> current = head; current != null; current = current.nextNode) {
+			if(current.data == object) return true;
+		}
+		return false;
+	}
+	
 	public T getLast() {
 		return last.data;
 	}
@@ -109,10 +117,10 @@ public class Queue<T> {
 	
 	public boolean remove(int index) {
 		boolean success = false;
-		Node<T> removed = (index == size - 1 ? last: getNode(index));
+		Node<T> removed = (index == size - 1 ? last : getNode(index));
 	
-		if(isEmpty());
-		else if(index >= size);
+		if(isEmpty()) success = false;
+		else if(index >= size) success = false;
 		else if(index == 0) {
 			head = head.nextNode;
 			success = true;
@@ -129,6 +137,15 @@ public class Queue<T> {
 		
 		if(success) size--;
 		return success;
+	}
+	
+	public void removeIf(MyPredicate<T> condition) {
+		for (int i = 0; i < this.size(); i++) {
+			if(condition.filter(this.get(i))) {
+				if(remove(i))
+					i--;
+			}
+		}
 	}
 	
 	private Node<T> getNode(int i) {

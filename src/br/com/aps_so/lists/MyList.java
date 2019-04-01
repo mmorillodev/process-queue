@@ -190,7 +190,7 @@ public class MyList<T> implements MyIterator<T>{
 	//Remove elements of the list depending on the filter defined by the user
 	public void removeIf(MyPredicate<T> predicate) {
 		for (int i = 0; i < this.length(); i++) {
-			if(predicate.filter(this.get(i))) {
+			if(predicate.filter(get(i))) {
 				this.remove(i);
 				i--;
 			}
