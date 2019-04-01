@@ -34,6 +34,14 @@ public class Queue<T> {
 		size++;
 	}
 	
+	public boolean addIfNotExist(T value) {
+		if(get(value) < 0) {
+			add(value);
+			return true;
+		}
+		return false;
+	}
+	
 	public T unQueue() {
 		if(isEmpty()) return null;
 		T v = head.data;
@@ -90,7 +98,7 @@ public class Queue<T> {
 		return head.data;
 	}
 	
-	private boolean remove(T object) {
+	public boolean remove(T object) {
 		int i = 0;
 		
 		for(Node<T> current = head; current != null; current = current.nextNode, i++) {
@@ -99,7 +107,7 @@ public class Queue<T> {
 		return false;
 	}
 	
-	private boolean remove(int index) {
+	public boolean remove(int index) {
 		boolean success = false;
 		Node<T> removed = (index == size - 1 ? last: getNode(index));
 	

@@ -4,16 +4,18 @@ import br.com.aps_so.interfaces.MyComparator;
 import br.com.aps_so.lists.Queue;
 
 public class Scheduler extends Thread implements MyComparator<Process>{
-	private int quantum4process;
+	private int quantum;
 	private long quantumMilis;
 	private Runnable onDeployThreadListener;
-	private Queue<Process> readyQueue;
+	private Queue<Process> requestQueue;
+	private Queue<Process> waitQueue;
 	private Queue<Process> ioQueue;
 	
-	public Scheduler(Queue<Process> queue, int quantum, long quantumMilis) {
-		this.readyQueue = queue;
-		this.quantum4process = quantum;
+	public Scheduler(Queue<Process> waitQueue, int quantum, long quantumMilis) {
+		this.waitQueue = waitQueue;
+		this.quantum = quantum;
 		this.quantumMilis = quantumMilis;
+		requestQueue = new Queue<>();
 	}
 	
 	public void setOnDeployThreadListener(Runnable runnable) {
@@ -27,21 +29,42 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 			return;	
 		}
 		
-		readyQueue.sort(this);
+		waitQueue.sort(this);
 		
-		int totalQuantum = 0;
-		int currentQuantum;
+		int totalTime = 0;
 		Process currentProcess;
 		
-		while(!readyQueue.isEmpty()) {
-			System.out.println("Time " + totalQuantum);
-			currentProcess = readyQueue.getFirst();
-			currentQuantum = 0;
-			if(currentProcess.getDuration() == 0) {
-				readyQueue.unQueue();
+		while(!(waitQueue.isEmpty() && requestQueue.isEmpty())) {
+			updateRequestQueue(totalTime);
+			if(!requestQueue.isEmpty()) {
+				currentProcess = requestQueue.unQueue();
+				for(int i = 0; i < (currentProcess.getBrust() < quantum  ? currentProcess.getBrust() + 1 : quantum); i++) {
+					System.out.println("Time " + totalTime + " -> " + currentProcess.getName());
+					currentProcess.setBrust(currentProcess.getBrust()-1);
+					delay();
+					totalTime++;
+				}
+				
+				if(currentProcess.getBrust() > 0) {
+					waitQueue.add(currentProcess);
+				}
 			}
-			if(currentProcess.getArrival() <= currentQuantum) {
-				System.out.println("-> " + currentProcess.getName());
+			else {
+				delay();
+				totalTime++;
+			}
+		}
+	}
+	
+	private void updateRequestQueue(int totalTime) {
+		Process current;
+		
+		for(int i = 0; i < waitQueue.size(); i++) {
+			current = waitQueue.get(i);
+			if(current.getArrival() <= totalTime) {
+				if(requestQueue.addIfNotExist(current)) {
+					waitQueue.remove(current);
+				}
 			}
 		}
 	}
@@ -53,11 +76,9 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		return 0;
 	}
 	
-	private void delay(long timeMilis) {
+	private void delay() {
 		try {
-			sleep(timeMilis);
-		} catch(InterruptedException e) {
-			delay(timeMilis);
-		}
+			sleep(quantumMilis);
+		} catch(InterruptedException e) {}
 	}
 }

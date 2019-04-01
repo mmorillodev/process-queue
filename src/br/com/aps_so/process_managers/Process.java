@@ -7,11 +7,11 @@ public class Process{
 	private int priority;
 	private boolean hasIO;
 	private Queue<Integer> ioArrivals;
-	private int duration, arrival;
+	private int brustTime, arrival;
 	
 	public Process(MyList<String> fileValues) {
 		setName(fileValues.get(0));
-		setDuration(Integer.parseInt(fileValues.get(1)));
+		setBrust(Integer.parseInt(fileValues.get(1)));
 		setArrival(Integer.parseInt(fileValues.get(2)));
 		hasIO(fileValues.get(3).equalsIgnoreCase("SIM") ? true : false);
 		if(hasIO()) {
@@ -51,12 +51,12 @@ public class Process{
 		return ioArrivals;
 	}
 	
-	public void setDuration(int duration) {
-		this.duration = duration;
+	public void setBrust(int duration) {
+		this.brustTime = duration;
 	}
 	
-	public int getDuration() {
-		return duration;
+	public int getBrust() {
+		return brustTime;
 	}
 	
 	public void setName(String name) {
@@ -74,7 +74,7 @@ public class Process{
 	public String toString() {
 		return "Name: " + name + 
 				", Arrival: " + arrival + 
-				", Duration: " + duration + 
+				", Duration: " + brustTime + 
 				", Has I/O: " + hasIO + 
 				", I/O moments: " + arrToString();
 	}

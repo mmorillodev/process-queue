@@ -7,11 +7,11 @@ import java.util.Scanner;
 
 import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
-import br.com.aps_so.interfaces.OnProcessChangeListener;
 
 public class Main {
-	private final String BASE_PATH = "C:\\Users\\mathe\\Documents\\";
-	private final long QUANTUM_MILIS = 1000;
+	private final String BASE_PATH = "C:\\Users\\nescara\\Documents\\";
+	private final int QUANTUM = 2;
+	private final long QUANTUM_MILIS = 0;
 	private Queue<Process> readyQueue;
 	
 	public static void main(String[] args) throws IOException {
@@ -27,16 +27,11 @@ public class Main {
 	}
 	
 	public void deploy() throws FileNotFoundException {
-		Scanner scanner = new Scanner(System.in);
 		readyQueue = new Queue<>();
 		
 		getFileInfo(new File(BASE_PATH + "\\processes.txt"));
-		 
-		print("\nType the quantum for each process: ");
-		int quantum = scanner.nextInt();
-		scanner.close();
 		
-		Scheduler manager = new Scheduler(readyQueue, quantum, QUANTUM_MILIS);
+		Scheduler manager = new Scheduler(readyQueue, QUANTUM, QUANTUM_MILIS);
 		
 		manager.start();
 	}
