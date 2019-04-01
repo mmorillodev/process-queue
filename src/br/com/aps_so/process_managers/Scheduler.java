@@ -36,11 +36,9 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		Process currentProcess;
 		
 		while(!(waitQueue.isEmpty() && requestQueue.isEmpty())) {
-			println("Atualizando request queue...");
 			updateRequestQueue(totalTime);
 			if(!requestQueue.isEmpty()) {
 				currentProcess = requestQueue.unQueue();
-				println("Processo retirado da request Queue para ser processado: " + currentProcess.getName());
 				int condition = (currentProcess.getBrust() < quantum  ? currentProcess.getBrust() : quantum);
 				for(int i = 0; i < condition; i++) {
 					System.out.println("Time " + totalTime + " -> " + currentProcess.getName());
@@ -48,19 +46,13 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 					delay();
 					totalTime++;
 				}
-				println("Nova duração do processo " + currentProcess.getName() + ": " + currentProcess.getBrust());
 				if(currentProcess.getBrust() > 0) {
-					println("Processo recolocado na wait Queue: " + currentProcess.getName());
 					waitQueue.add(currentProcess);
 				}
-				else
-					println("Processo " + currentProcess.getName() + " ja finalizado.");
 			}
 			else if(requestQueue == null) {
-				println("Deu ruim. request queue ta nula.");
 			}
 			else {
-				println("Requeste queue ta vazia.");
 				delay();
 				totalTime++;
 			}
@@ -69,19 +61,12 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 	
 	private void updateRequestQueue(int totalTime) {
 		Process current;
-		println("Tamanho da wait queue: " + waitQueue.size());
 		for(int i = 0; i < waitQueue.size(); i++) {
-			println("Index " + i);
 			current = waitQueue.get(i);
-			println("Processo sendo analisado: " + current.getName());
 			if(current.getArrival() <= totalTime) {
 				requestQueue.addIfNotExist(current);
-				println("Já iniciou o processo " + current.getName() + " entao add na request queue.");
 			}
-			println("Fim do index " + i);
 		}
-		println("Request queue: " + requestQueue.toString());
-		println("Wait queue: " + waitQueue.toString());
 		waitQueue.removeIf(new MyPredicate<Process>() {
 			@Override
 			public boolean filter(Process t) {
@@ -89,8 +74,6 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 				return false;
 			}
 		});
-		println("Wait queue apos removeif: " + waitQueue.toString());
-		println("Fim da atualização da requuest queue. Novo tamanho da request Queue: " + requestQueue.size() + ". Tamanho da wait Queue: " + waitQueue.size());
 	}
 	
 	@Override
@@ -104,9 +87,5 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		try {
 			sleep(quantumMilis);
 		} catch(InterruptedException e) {}
-	}
-	
-	private void println(String str) {
-		System.out.println(str);
 	}
 }
