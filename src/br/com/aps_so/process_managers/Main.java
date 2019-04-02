@@ -17,8 +17,8 @@ public class Main implements OnProcessChangeListener, OnFinishProcessListener {
 	private Queue<Process> readyQueue;
 	
 	public static void main(String[] args) throws IOException {
-		System.out.println("********************************************");
-		System.out.println("********* Escalonador Round-Robin **********");
+		System.out.println("********************************************\n");
+		System.out.println("********* Escalonador Round-Robin **********\n");
 		System.out.println("********************************************\n");
 		try {
 			new Main().deploy();
@@ -58,8 +58,8 @@ public class Main implements OnProcessChangeListener, OnFinishProcessListener {
 	}
 
 	@Override
-	public void onChange(Process newProcess, int currentTime) {
-		System.out.println("Tempo " + currentTime + ":\n CPU -> " + newProcess.getName() + "\n");
+	public void onChange(Process newProcess, int currentTime, Queue<Process> readyQueue) {
+		System.out.println("Tempo " + currentTime + ":\n CPU -> " + newProcess.getName() + "\n Fila - > " + readyQueue.toString());
 	}
 
 	@Override

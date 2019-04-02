@@ -52,7 +52,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 					updateWaitTime(currentProcess);
 					
 					if(changeCallback != null)
-						changeCallback.onChange(currentProcess, totalTime);
+						changeCallback.onChange(currentProcess, totalTime, requestQueue);
 					
 					currentProcess.setBrust(currentProcess.getBrust()-1);
 					delay();
@@ -84,7 +84,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 
 			@Override
 			public void action(Process value) {
-				System.out.println("Process " + value.getName() + ":\n waiting time: " + value.getWaitTime() + "; turn around: " + value.getTurnAround());
+				System.out.println("Process " + value.getName() + ":\nwaiting time: " + value.getWaitTime() + "; turn around: " + value.getTurnAround() + "\n");
 				acmWait += value.getWaitTime();
 				acmTurnAround += value.getTurnAround();
 			}
