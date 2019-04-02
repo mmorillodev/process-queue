@@ -10,18 +10,18 @@ import br.com.aps_so.lists.Queue;
 
 public class Main {
 	private final String BASE_PATH = "C:\\Users\\nescara\\Documents\\";
-	private final int QUANTUM = 2;
+	private final int QUANTUM = 3;
 	private final long QUANTUM_MILIS = 0;
 	private Queue<Process> readyQueue;
 	
 	public static void main(String[] args) throws IOException {
-		println("===============================================================================\n");
-		println("\t\t\t\tRound Robin");
-		println("\n===============================================================================");
+		System.out.println("===============================================================================\n");
+		System.out.println("\t\t\t\tRound Robin");
+		System.out.println("\n===============================================================================");
 		try {
 			new Main().deploy();
 		} catch(FileNotFoundException e) {
-			print("File not found: " + e.getMessage());
+			System.out.print("File not found: " + e.getMessage());
 		}
 		
 	}
@@ -52,8 +52,4 @@ public class Main {
 		}
 		fileDatas.close();
 	}
-	
-	public static void print(String str) {System.out.print(str);}
-	public static void println(String str) {System.out.println(str);}
-	public static void println() {System.out.println();}
 }
