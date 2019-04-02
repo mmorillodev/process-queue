@@ -5,11 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
+import br.com.aps_so.interfaces.OnFinishProcessListener;
 import br.com.aps_so.interfaces.OnProcessChangeListener;
 import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
-public class Main implements OnProcessChangeListener{
+public class Main implements OnProcessChangeListener, OnFinishProcessListener {
 	private final String BASE_PATH = "C:\\Users\\nescara\\Documents\\";
 	private final int QUANTUM = 2;
 	private final long QUANTUM_MILIS = 0;
@@ -18,7 +19,7 @@ public class Main implements OnProcessChangeListener{
 	public static void main(String[] args) throws IOException {
 		System.out.println("********************************************");
 		System.out.println("********* Escalonador Round-Robin **********");
-		System.out.println("********************************************");
+		System.out.println("********************************************\n");
 		try {
 			new Main().deploy();
 		} catch(FileNotFoundException e) {
@@ -58,6 +59,12 @@ public class Main implements OnProcessChangeListener{
 
 	@Override
 	public void onChange(Process newProcess, int currentTime) {
-		System.out.println("Time " + currentTime + " -> " + newProcess.getName());
+		System.out.println("Tempo " + currentTime + ":\n CPU -> " + newProcess.getName() + "\n");
+	}
+
+	@Override
+	public void onFinish(Process oldProcess, int currentTime) {
+		System.out.println("Fim do processo " + oldProcess.getName());
+		
 	}
 }

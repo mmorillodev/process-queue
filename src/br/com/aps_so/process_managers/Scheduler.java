@@ -3,6 +3,7 @@ package br.com.aps_so.process_managers;
 import br.com.aps_so.interfaces.MyComparator;
 import br.com.aps_so.interfaces.MyConsumer;
 import br.com.aps_so.interfaces.MyPredicate;
+import br.com.aps_so.interfaces.OnFinishProcessListener;
 import br.com.aps_so.interfaces.OnProcessChangeListener;
 import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
@@ -10,7 +11,8 @@ import br.com.aps_so.lists.Queue;
 public class Scheduler extends Thread implements MyComparator<Process>{
 	private int quantum, acmWait, acmTurnAround;
 	private long quantumMilis;
-	private OnProcessChangeListener listener;
+	private OnProcessChangeListener changeCallback;
+	private OnFinishProcessListener finishCallback;
 	private Queue<Process> requestQueue, waitQueue, ioQueue;
 	private MyList<Process> finished;
 	
@@ -24,8 +26,12 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		acmTurnAround = 0;
 	}
 	
-	public void setOnProcessChangeListener(OnProcessChangeListener listener) {
-		this.listener = listener;
+	public void setOnProcessChangeListener(OnProcessChangeListener changeCallback) {
+		this.changeCallback = changeCallback;
+	}
+	
+	public void setOnProcessFinishListener(OnFinishProcessListener finishCallback) {
+		this.finishCallback = finishCallback;
 	}
 	
 	@Override
@@ -37,7 +43,6 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		
 		while(!(waitQueue.isEmpty() && requestQueue.isEmpty())) {
 			updateRequestQueue(totalTime);
-			
 			if(!requestQueue.isEmpty()) {
 				currentProcess = requestQueue.unQueue();
 				
@@ -45,7 +50,10 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 //				int i = Math.abs(currentProcess.getBrust() - quantum);
 				for(int i = 0; i < condition; i++) {
 					updateWaitTime(currentProcess);
-					listener.onChange(currentProcess, totalTime);
+					
+					if(changeCallback != null)
+						changeCallback.onChange(currentProcess, totalTime);
+					
 					currentProcess.setBrust(currentProcess.getBrust()-1);
 					delay();
 					totalTime++;
@@ -55,6 +63,10 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 				}
 				else {
 					currentProcess.setTurnAround(totalTime - currentProcess.getArrival());
+					
+					if(finishCallback != null)
+						finishCallback.onFinish(currentProcess, totalTime);
+					
 					finished.push(currentProcess);
 				}
 			}
@@ -64,18 +76,21 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 			}
 		}
 		
+		System.out.println("*****************************************\n");
+		System.out.println("* Encerrando simulacao de escalonamento *\n");
+		System.out.println("*****************************************\n");
 		
 		finished.forEach(new MyConsumer<Process>() {
 
 			@Override
 			public void action(Process value) {
-				System.out.println("Process " + value.getName() + " waiting time: " + value.getWaitTime() + "; turn around: " + value.getTurnAround());
+				System.out.println("Process " + value.getName() + ":\n waiting time: " + value.getWaitTime() + "; turn around: " + value.getTurnAround());
 				acmWait += value.getWaitTime();
 				acmTurnAround += value.getTurnAround();
 			}
 		});
 		
-		System.out.println("Média de waiting time: " + acmWait/finished.length() + "\nMédia de turnAround: " + acmTurnAround/finished.length());
+		System.out.println("\nMédia de waiting time: " + acmWait/finished.length() + "\nMédia de turnAround: " + acmTurnAround/finished.length());
 	}
 	
 	private void updateRequestQueue(int totalTime) {
