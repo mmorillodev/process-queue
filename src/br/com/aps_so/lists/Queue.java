@@ -130,7 +130,6 @@ public class Queue<T> {
 			success = true;
 		}
 		else if(removed == last) {
-			removed.previousNode.nextNode = null;
 			last = removed.previousNode;
 			success = true;
 		}

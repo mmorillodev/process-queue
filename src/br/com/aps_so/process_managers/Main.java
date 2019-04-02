@@ -5,19 +5,20 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
+import br.com.aps_so.interfaces.OnProcessChangeListener;
 import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
-public class Main {
+public class Main implements OnProcessChangeListener{
 	private final String BASE_PATH = "C:\\Users\\nescara\\Documents\\";
 	private final int QUANTUM = 3;
-	private final long QUANTUM_MILIS = 0;
+	private final long QUANTUM_MILIS = 500;
 	private Queue<Process> readyQueue;
 	
 	public static void main(String[] args) throws IOException {
-		System.out.println("===============================================================================\n");
-		System.out.println("\t\t\t\tRound Robin");
-		System.out.println("\n===============================================================================");
+		System.out.println("********************************************");
+		System.out.println("********* Escalonador Round-Robin **********");
+		System.out.println("********************************************");
 		try {
 			new Main().deploy();
 		} catch(FileNotFoundException e) {
@@ -32,6 +33,8 @@ public class Main {
 		getFileInfo(new File(BASE_PATH + "\\processes.txt"));
 		
 		Scheduler manager = new Scheduler(readyQueue, QUANTUM, QUANTUM_MILIS);
+		
+		manager.setOnProcessChangeListener(this);
 		
 		manager.start();
 	}
@@ -51,5 +54,10 @@ public class Main {
 			currentProcess.push(line);
 		}
 		fileDatas.close();
+	}
+
+	@Override
+	public void onChange(Process newProcess, int currentTime) {
+		System.out.println("Time " + currentTime + " -> " + newProcess.getName());
 	}
 }

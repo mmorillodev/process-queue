@@ -3,15 +3,15 @@ package br.com.aps_so.process_managers;
 import br.com.aps_so.interfaces.MyComparator;
 import br.com.aps_so.interfaces.MyConsumer;
 import br.com.aps_so.interfaces.MyPredicate;
+import br.com.aps_so.interfaces.OnProcessChangeListener;
 import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
 public class Scheduler extends Thread implements MyComparator<Process>{
 	private int quantum, acmWait, acmTurnAround;
 	private long quantumMilis;
-	private Queue<Process> requestQueue;
-	private Queue<Process> waitQueue;
-	private Queue<Process> ioQueue;
+	private OnProcessChangeListener listener;
+	private Queue<Process> requestQueue, waitQueue, ioQueue;
 	private MyList<Process> finished;
 	
 	public Scheduler(Queue<Process> waitQueue, int quantum, long quantumMilis) {
@@ -22,6 +22,10 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		finished = new MyList<>();
 		acmWait = 0;
 		acmTurnAround = 0;
+	}
+	
+	public void setOnProcessChangeListener(OnProcessChangeListener listener) {
+		this.listener = listener;
 	}
 	
 	@Override
@@ -41,7 +45,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 //				int i = Math.abs(currentProcess.getBrust() - quantum);
 				for(int i = 0; i < condition; i++) {
 					updateWaitTime(currentProcess);
-					System.out.println("Time " + totalTime + " -> " + currentProcess.getName());
+					listener.onChange(currentProcess, totalTime);
 					currentProcess.setBrust(currentProcess.getBrust()-1);	
 					delay();
 					totalTime++;
