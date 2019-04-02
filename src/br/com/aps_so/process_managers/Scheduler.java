@@ -7,9 +7,7 @@ import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
 public class Scheduler extends Thread implements MyComparator<Process>{
-	private int quantum;
-	private int acmWait = 0;
-	private int acmExec = 0;
+	private int quantum, acmWait, acmTurnAround;
 	private long quantumMilis;
 	private Queue<Process> requestQueue;
 	private Queue<Process> waitQueue;
@@ -22,6 +20,8 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		this.quantumMilis = quantumMilis;
 		requestQueue = new Queue<>();
 		finished = new MyList<>();
+		acmWait = 0;
+		acmTurnAround = 0;
 	}
 	
 	@Override
@@ -41,7 +41,6 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 //				int i = Math.abs(currentProcess.getBrust() - quantum);
 				for(int i = 0; i < condition; i++) {
 					updateWaitTime(currentProcess);
-					currentProcess.setExecutingTime(currentProcess.getExecutingTime()+1);
 					System.out.println("Time " + totalTime + " -> " + currentProcess.getName());
 					currentProcess.setBrust(currentProcess.getBrust()-1);	
 					delay();
@@ -50,8 +49,10 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 				if(currentProcess.getBrust() > 0) {
 					waitQueue.add(currentProcess);
 				}
-				else
+				else {
+					currentProcess.setTurnAround(totalTime - currentProcess.getArrival());
 					finished.push(currentProcess);
+				}
 			}
 			else {
 				delay();
@@ -64,13 +65,13 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 
 			@Override
 			public void action(Process value) {
-				System.out.println("Process " + value.getName() + " waiting time: " + value.getWaitTime() + "; turn around: " + value.getExecutingTime());
+				System.out.println("Process " + value.getName() + " waiting time: " + value.getWaitTime() + "; turn around: " + value.getTurnAround());
 				acmWait += value.getWaitTime();
-				acmExec += value.getExecutingTime();
+				acmTurnAround += value.getTurnAround();
 			}
 		});
 		
-		System.out.println("Média de waiting time: " + acmWait/finished.length() + "\nMédia de turnAround: " + acmExec/finished.length());
+		System.out.println("Média de waiting time: " + acmWait/finished.length() + "\nMédia de turnAround: " + acmTurnAround/finished.length());
 	}
 	
 	private void updateRequestQueue(int totalTime) {

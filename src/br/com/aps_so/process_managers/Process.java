@@ -6,7 +6,7 @@ public class Process{
 	private String name;
 	private boolean hasIO;
 	private Queue<Integer> ioArrivals;
-	private int brustTime, arrival, priority, waitTime, executingTime;
+	private int brustTime, arrival, priority, waitTime, turnAround;
 	
 	public Process(MyList<String> fileValues) {
 		setName(fileValues.get(0));
@@ -58,12 +58,12 @@ public class Process{
 		return brustTime;
 	}
 	
-	public void setExecutingTime(int executingTime) {
-		this.executingTime = executingTime;
+	public void setTurnAround(int turnAround) {
+		this.turnAround = turnAround;
 	}
 	
-	public int getExecutingTime() {
-		return executingTime;
+	public int getTurnAround() {
+		return turnAround;
 	}
 	
 	public void setName(String name) {
