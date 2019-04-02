@@ -22,7 +22,7 @@ public class Queue<T> {
 		}
 	}
 	
-	public void add(T value) {
+	public synchronized void add(T value) {
 		Node<T> newNode = new Node<T>(value);
 		if(isEmpty()) {
 			head = last = newNode;
@@ -35,7 +35,7 @@ public class Queue<T> {
 		size++;
 	}
 	
-	public boolean addIfNotExist(T value) {
+	public synchronized boolean addIfNotExist(T value) {
 		if(!contains(value)) {
 			add(value);
 			return true;
@@ -74,13 +74,17 @@ public class Queue<T> {
 	
 	public T get(int i) {
 		if(i == 0) return head.data;
-		int c = 0;
+		int c = 1;
 				
-		for(Node<T> current = head; current != null; current = current.nextNode, c++) {	
+		for(Node<T> current = head.nextNode; current != null; current = current.nextNode, c++) {	
 			if(c == i) return current.data;
 		}
 		
 		return null;
+	}
+	
+	public Node<T> getFirstNodeNext() {
+		return head.nextNode;
 	}
 	
 	public int get(T obj) {
@@ -127,6 +131,7 @@ public class Queue<T> {
 		}
 		else if(removed == last) {
 			removed.previousNode.nextNode = null;
+			last = removed.previousNode;
 			success = true;
 		}
 		else {
@@ -148,7 +153,7 @@ public class Queue<T> {
 		}
 	}
 	
-	private Node<T> getNode(int i) {
+	public Node<T> getNode(int i) {
 		if(i == 0) return head;
 		int c = 0;
 		
@@ -177,7 +182,7 @@ public class Queue<T> {
 		return size == 0;
 	}
 	
-	public void forEach(MyConsumer<T> consumer) {
+	public synchronized void forEach(MyConsumer<T> consumer) {
 		for(int i = 0; i < size; i++) {
 			consumer.action(get(i));
 		}

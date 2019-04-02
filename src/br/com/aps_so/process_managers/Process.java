@@ -23,6 +23,7 @@ public class Process{
 	public Process(String name, int priority){
 		this.name = name;
 		this.priority = priority;
+		ioArrivals = new Queue<>();
 	}
 	
 	public void hasIO(boolean hasIO) {

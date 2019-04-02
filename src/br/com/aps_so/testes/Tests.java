@@ -10,45 +10,28 @@ import br.com.aps_so.process_managers.Process;
 
 public class Tests {
 	public static void main(String[] args) throws FileNotFoundException {
-		Queue<Process> queue = getFileInfo(new File("C:\\Users\\nescara\\Documents\\processes.txt"));
-		Queue<Process> outra = new Queue<>();
+		Queue<Process> wait = getFileInfo(new File("C:\\Users\\nescara\\Documents\\processes.txt"));
+		Queue<Process> ready = new Queue<>();
 		
-		Process current = queue.getFirst();
-		outra.add(queue.get(0));
-		outra.add(queue.get(1));
-		outra.add(queue.get(2));
+		ready.add(wait.get(0));
+		ready.add(wait.get(1));
+		ready.add(wait.get(2));
 		
-		outra.removeIf(new MyPredicate<Process>() {
+		wait.removeIf(new MyPredicate<Process>() {
 			
 			@Override
 			public boolean filter(Process t) {
-				if(queue.contains(t)) {
+				if(ready.contains(t)) {
 					return true;
 				}
 				return false;
 			}
 		});
-		
-		
-		System.out.println(outra.toString());
-		
-		Queue<Integer> nums = new Queue<>();
-		
-		nums.add(1);
-		nums.add(2);
-		nums.add(3);
-		nums.add(4);
-		nums.add(5);
-		
-		nums.removeIf(new MyPredicate<Integer>() {
+		Process p = new Process("dasd", 0);
+		Process p2 = new Process("dassd", 0);
+		Process p3 = new Process("dsda", 0);
 
-			@Override
-			public boolean filter(Integer t) {
-				if(t % 2 == 0) return true;
-				return false;
-			}
-		});
-		System.out.println(nums.toString());
+		System.out.println(wait.toString());
 	}
 	
 	public static Queue<Process> getFileInfo(File file) throws FileNotFoundException {

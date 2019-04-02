@@ -75,13 +75,16 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 	}
 	
 	private void updateRequestQueue(int totalTime) {
-		Process current;
-		for(int i = 0; i < waitQueue.size(); i++) {
-			current = waitQueue.get(i);
-			if(current.getArrival() <= totalTime) {
-				requestQueue.addIfNotExist(current);
+		waitQueue.forEach(new MyConsumer<Process>() {
+
+			@Override
+			public void action(Process current) {
+				if(current.getArrival() <= totalTime) {
+					requestQueue.addIfNotExist(current);
+				}
 			}
-		}
+		});
+		
 		waitQueue.removeIf(new MyPredicate<Process>() {
 			@Override
 			public boolean filter(Process t) {
