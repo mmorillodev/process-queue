@@ -60,7 +60,7 @@ public class Main implements OnProcessChangeListener, OnFinishProcessListener {
 
 	@Override
 	public void onChange(Process newProcess, int currentTime, Queue<Process> readyQueue) {
-		System.out.println("\nTempo " + currentTime + ":\n CPU -> " + newProcess.getName() + "\n Fila - > " + readyQueue.toString());
+		System.out.println("\nTempo " + currentTime + ":\n CPU -> " + newProcess.getName() + "\n Fila -> " + readyQueue.toString());
 	}
 
 	@Override
