@@ -48,6 +48,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 				
 				int condition = (currentProcess.getBrust() < quantum  ? currentProcess.getBrust() : quantum);
 //				int i = Math.abs(currentProcess.getBrust() - quantum);
+				
 				for(int i = 0; i < condition; i++) {
 					updateWaitTime(currentProcess);
 					
@@ -99,7 +100,9 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 			@Override
 			public void action(Process current) {
 				if(current.getArrival() <= totalTime) {
-					requestQueue.addIfNotExist(current);
+					if(requestQueue.addIfNotExist(current)) {
+//						System.out.println("Chegada do processo " + current.getName());
+					}
 				}
 			}
 		});

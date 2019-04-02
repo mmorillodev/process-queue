@@ -36,6 +36,7 @@ public class Main implements OnProcessChangeListener, OnFinishProcessListener {
 		Scheduler manager = new Scheduler(readyQueue, QUANTUM, QUANTUM_MILIS);
 		
 		manager.setOnProcessChangeListener(this);
+		manager.setOnProcessFinishListener(this);
 		
 		manager.start();
 	}
@@ -59,12 +60,12 @@ public class Main implements OnProcessChangeListener, OnFinishProcessListener {
 
 	@Override
 	public void onChange(Process newProcess, int currentTime, Queue<Process> readyQueue) {
-		System.out.println("Tempo " + currentTime + ":\n CPU -> " + newProcess.getName() + "\n Fila - > " + readyQueue.toString() + "\n");
+		System.out.println("\nTempo " + currentTime + ":\n CPU -> " + newProcess.getName() + "\n Fila - > " + readyQueue.toString());
 	}
 
 	@Override
 	public void onFinish(Process oldProcess, int currentTime) {
-		System.out.println("Fim do processo " + oldProcess.getName());
+		System.out.println(" Fim do processo " + oldProcess.getName());
 		
 	}
 }
