@@ -11,8 +11,8 @@ import br.com.aps_so.lists.Queue;
 
 public class Main implements OnProcessChangeListener{
 	private final String BASE_PATH = "C:\\Users\\nescara\\Documents\\";
-	private final int QUANTUM = 3;
-	private final long QUANTUM_MILIS = 500;
+	private final int QUANTUM = 2;
+	private final long QUANTUM_MILIS = 0;
 	private Queue<Process> readyQueue;
 	
 	public static void main(String[] args) throws IOException {

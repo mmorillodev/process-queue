@@ -46,7 +46,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 				for(int i = 0; i < condition; i++) {
 					updateWaitTime(currentProcess);
 					listener.onChange(currentProcess, totalTime);
-					currentProcess.setBrust(currentProcess.getBrust()-1);	
+					currentProcess.setBrust(currentProcess.getBrust()-1);
 					delay();
 					totalTime++;
 				}
@@ -117,6 +117,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 	}
 	
 	private void delay() {
+		if(quantumMilis == 0) return;
 		try {
 			sleep(quantumMilis);
 		} catch(InterruptedException e) {}
