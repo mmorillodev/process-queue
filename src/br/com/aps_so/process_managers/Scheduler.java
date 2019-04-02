@@ -1,35 +1,30 @@
 package br.com.aps_so.process_managers;
 
 import br.com.aps_so.interfaces.MyComparator;
+import br.com.aps_so.interfaces.MyConsumer;
 import br.com.aps_so.interfaces.MyPredicate;
+import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
 public class Scheduler extends Thread implements MyComparator<Process>{
 	private int quantum;
+	private int acmWait = 0;
 	private long quantumMilis;
-	private Runnable onDeployThreadListener;
 	private Queue<Process> requestQueue;
 	private Queue<Process> waitQueue;
 	private Queue<Process> ioQueue;
+	private MyList<Process> finished;
 	
 	public Scheduler(Queue<Process> waitQueue, int quantum, long quantumMilis) {
 		this.waitQueue = waitQueue;
 		this.quantum = quantum;
 		this.quantumMilis = quantumMilis;
 		requestQueue = new Queue<>();
-	}
-	
-	public void setOnDeployThreadListener(Runnable runnable) {
-		this.onDeployThreadListener = runnable;
+		finished = new MyList<>();
 	}
 	
 	@Override
 	public void run() {
-		if(onDeployThreadListener != null) {
-			onDeployThreadListener.run();
-			return;	
-		}
-		
 		waitQueue.sort(this);
 		
 		int totalTime = 0;
@@ -37,10 +32,15 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		
 		while(!(waitQueue.isEmpty() && requestQueue.isEmpty())) {
 			updateRequestQueue(totalTime);
+			
 			if(!requestQueue.isEmpty()) {
 				currentProcess = requestQueue.unQueue();
+				
 				int condition = (currentProcess.getBrust() < quantum  ? currentProcess.getBrust() : quantum);
+//				int i = Math.abs(currentProcess.getBrust() - quantum);
 				for(int i = 0; i < condition; i++) {
+					updateWaitTime(currentProcess);
+					currentProcess.setExecutingTime(currentProcess.getExecutingTime()+1);
 					System.out.println("Time " + totalTime + " -> " + currentProcess.getName());
 					currentProcess.setBrust(currentProcess.getBrust()-1);	
 					delay();
@@ -49,14 +49,26 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 				if(currentProcess.getBrust() > 0) {
 					waitQueue.add(currentProcess);
 				}
-			}
-			else if(requestQueue == null) {
+				else
+					finished.push(currentProcess);
 			}
 			else {
 				delay();
 				totalTime++;
 			}
 		}
+		
+		
+		finished.forEach(new MyConsumer<Process>() {
+
+			@Override
+			public void action(Process value) {
+				System.out.println("Process " + value.getName() + " waiting time: " + value.getWaitTime());
+				acmWait += value.getWaitTime();
+			}
+		});
+		
+		System.out.println("Média de waiting time: " + acmWait/finished.length());
 	}
 	
 	private void updateRequestQueue(int totalTime) {
@@ -72,6 +84,17 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 			public boolean filter(Process t) {
 				if(requestQueue.contains(t)) return true;
 				return false;
+			}
+		});
+	}
+	
+	private void updateWaitTime(Process currentProcess) {
+		requestQueue.forEach(new MyConsumer<Process>() {
+			
+			@Override
+			public void action(Process value) {
+				if(value == currentProcess) return;
+				value.setWaitTime(currentProcess.getWaitTime()+1);
 			}
 		});
 	}

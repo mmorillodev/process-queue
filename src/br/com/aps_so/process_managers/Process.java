@@ -4,10 +4,9 @@ import  br.com.aps_so.lists.*;
 
 public class Process{
 	private String name;
-	private int priority;
 	private boolean hasIO;
 	private Queue<Integer> ioArrivals;
-	private int brustTime, arrival;
+	private int brustTime, arrival, priority, waitTime, executingTime;
 	
 	public Process(MyList<String> fileValues) {
 		setName(fileValues.get(0));
@@ -59,6 +58,14 @@ public class Process{
 		return brustTime;
 	}
 	
+	public void setExecutingTime(int executingTime) {
+		this.executingTime = executingTime;
+	}
+	
+	public int getExecutingTime() {
+		return executingTime;
+	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -69,6 +76,14 @@ public class Process{
 	
 	public void setPiority(int priority) {
 		this.priority = priority;
+	}
+	
+	public void setWaitTime(int waitTime) {
+		this.waitTime = waitTime;
+	}
+	
+	public int getWaitTime() {
+		return waitTime;
 	}
 	
 	public String toString() {
