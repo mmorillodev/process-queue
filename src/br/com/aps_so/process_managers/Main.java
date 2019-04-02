@@ -17,7 +17,7 @@ public class Main implements OnProcessChangeListener, OnFinishProcessListener {
 	private Queue<Process> readyQueue;
 	
 	public static void main(String[] args) throws IOException {
-		System.out.println("********************************************\n");
+		System.out.println("\n********************************************\n");
 		System.out.println("********* Escalonador Round-Robin **********\n");
 		System.out.println("********************************************\n");
 		try {

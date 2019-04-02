@@ -77,7 +77,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 			}
 		}
 		
-		System.out.println("*****************************************\n");
+		System.out.println("\n*****************************************\n");
 		System.out.println("* Encerrando simulacao de escalonamento *\n");
 		System.out.println("*****************************************\n");
 		
