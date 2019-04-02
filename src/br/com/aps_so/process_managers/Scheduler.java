@@ -9,6 +9,7 @@ import br.com.aps_so.lists.Queue;
 public class Scheduler extends Thread implements MyComparator<Process>{
 	private int quantum;
 	private int acmWait = 0;
+	private int acmExec = 0;
 	private long quantumMilis;
 	private Queue<Process> requestQueue;
 	private Queue<Process> waitQueue;
@@ -63,12 +64,13 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 
 			@Override
 			public void action(Process value) {
-				System.out.println("Process " + value.getName() + " waiting time: " + value.getWaitTime());
+				System.out.println("Process " + value.getName() + " waiting time: " + value.getWaitTime() + "; turn around: " + value.getExecutingTime());
 				acmWait += value.getWaitTime();
+				acmExec += value.getExecutingTime();
 			}
 		});
 		
-		System.out.println("Média de waiting time: " + acmWait/finished.length());
+		System.out.println("Média de waiting time: " + acmWait/finished.length() + "\nMédia de turnAround: " + acmExec/finished.length());
 	}
 	
 	private void updateRequestQueue(int totalTime) {
