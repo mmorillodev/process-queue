@@ -3,16 +3,14 @@ package br.com.aps_so.process_managers;
 import br.com.aps_so.interfaces.MyComparator;
 import br.com.aps_so.interfaces.MyConsumer;
 import br.com.aps_so.interfaces.MyPredicate;
-import br.com.aps_so.interfaces.OnFinishProcessListener;
-import br.com.aps_so.interfaces.OnProcessChangeListener;
 import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
 public class Scheduler extends Thread implements MyComparator<Process>{
 	private int quantum, acmWait, acmTurnAround;
 	private long quantumMilis;
-	private OnProcessChangeListener changeCallback;
-	private OnFinishProcessListener finishCallback;
+	private Process.OnProcessChangeListener changeCallback;
+	private Process.OnFinishProcessListener finishCallback;
 	private Queue<Process> requestQueue, waitQueue, ioQueue;
 	private MyList<Process> finished;
 	
@@ -26,11 +24,11 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		acmTurnAround = 0;
 	}
 	
-	public void setOnProcessChangeListener(OnProcessChangeListener changeCallback) {
+	public void setOnProcessChangeListener(Process.OnProcessChangeListener changeCallback) {
 		this.changeCallback = changeCallback;
 	}
 	
-	public void setOnProcessFinishListener(OnFinishProcessListener finishCallback) {
+	public void setOnProcessFinishListener(Process.OnFinishProcessListener finishCallback) {
 		this.finishCallback = finishCallback;
 	}
 	
