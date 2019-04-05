@@ -85,7 +85,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 
 			@Override
 			public void action(Process value) {
-				System.out.println("Process " + value.getName() + ":\nwaiting time: " + value.getWaitTime() + "; turn around: " + value.getTurnAround() + "\n");
+				System.out.println("Process " + value.getName() + ":\n Waiting time: " + value.getWaitTime() + "; turn around: " + value.getTurnAround() + "\n");
 				acmWait += value.getWaitTime();
 				acmTurnAround += value.getTurnAround();
 			}
