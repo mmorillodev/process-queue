@@ -1,6 +1,7 @@
 package br.com.aps_so.process_managers;
 
 import  br.com.aps_so.lists.*;
+import br.com.aps_so.process_managers.Process;
 
 public class Process{
 	private String name;
@@ -116,5 +117,12 @@ public class Process{
 		}
 		
 		return newArr;
+	}
+	
+	public interface OnFinishProcessListener{
+		public void onFinish(Process oldProcess, int currentTime);
+	}
+	public interface OnProcessChangeListener{
+		public void onChange(Process newProcess, int currentTime, Queue<Process> raedyQueue);
 	}
 }

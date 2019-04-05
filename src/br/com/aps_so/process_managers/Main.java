@@ -5,12 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
-import br.com.aps_so.interfaces.OnFinishProcessListener;
-import br.com.aps_so.interfaces.OnProcessChangeListener;
 import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
-public class Main implements OnProcessChangeListener, OnFinishProcessListener {
+public class Main implements Process.OnProcessChangeListener, Process.OnFinishProcessListener {
 	private final String BASE_PATH = "C:\\Users\\nescara\\Documents\\";
 	private final int QUANTUM = 2;
 	private final long QUANTUM_MILIS = 0;
