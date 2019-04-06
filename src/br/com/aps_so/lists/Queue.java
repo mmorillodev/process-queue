@@ -2,6 +2,7 @@ package br.com.aps_so.lists;
 
 import br.com.aps_so.interfaces.MyComparator;
 import br.com.aps_so.interfaces.MyConsumer;
+import br.com.aps_so.interfaces.MyPredicate;
 import br.com.aps_so.interfaces.Prioriser;
 import br.com.aps_so.exceptions.ImplementationNotFoundException;
 import br.com.aps_so.lists.Node;
@@ -15,7 +16,13 @@ public class Queue<T> {
 		
 	}
 	
-	public void add(T value) {
+	public Queue(T[] arr) {
+		for(int i = 0; i < arr.length; i++) {
+			add(arr[i]);
+		}
+	}
+	
+	public synchronized void add(T value) {
 		Node<T> newNode = new Node<T>(value);
 		if(isEmpty()) {
 			head = last = newNode;
@@ -26,6 +33,14 @@ public class Queue<T> {
 			last = newNode;
 		}
 		size++;
+	}
+	
+	public synchronized boolean addIfNotExist(T value) {
+		if(!contains(value)) {
+			add(value);
+			return true;
+		}
+		return false;
 	}
 	
 	public T unQueue() {
@@ -57,18 +72,45 @@ public class Queue<T> {
 		return statement;
 	}
 	
-	private T get(int i) {
+	public T get(int i) {
 		if(i == 0) return head.data;
-		int c = 0;
+		int c = 1;
 				
-		for(Node<T> current = head; current != null; current = current.nextNode, c++) {	
+		for(Node<T> current = head.nextNode; current != null; current = current.nextNode, c++) {	
 			if(c == i) return current.data;
 		}
 		
 		return null;
 	}
 	
-	private boolean remove(T object) {
+	public Node<T> getFirstNodeNext() {
+		return head.nextNode;
+	}
+	
+	public int get(T obj) {
+		int c = 0;
+		for(Node<T> current = head; current != null; current = current.nextNode, c++) {	
+			if(current.data == obj) return c;
+		}
+		return -1;
+	}
+	
+	public boolean contains(T object) {
+		for(Node<T> current = head; current != null; current = current.nextNode) {
+			if(current.data == object) return true;
+		}
+		return false;
+	}
+	
+	public T getLast() {
+		return last.data;
+	}
+	
+	public T getFirst() {
+		return head.data;
+	}
+	
+	public boolean remove(T object) {
 		int i = 0;
 		
 		for(Node<T> current = head; current != null; current = current.nextNode, i++) {
@@ -77,18 +119,18 @@ public class Queue<T> {
 		return false;
 	}
 	
-	private boolean remove(int index) {
+	public boolean remove(int index) {
 		boolean success = false;
-		Node<T> removed = (index == size - 1 ? last: getNode(index));
+		Node<T> removed = (index == size - 1 ? last : getNode(index));
 	
-		if(isEmpty());
-		else if(index >= size);
+		if(isEmpty()) success = false;
+		else if(index >= size) success = false;
 		else if(index == 0) {
 			head = head.nextNode;
 			success = true;
 		}
 		else if(removed == last) {
-			removed.previousNode.nextNode = null;
+			last = removed.previousNode;
 			success = true;
 		}
 		else {
@@ -101,7 +143,16 @@ public class Queue<T> {
 		return success;
 	}
 	
-	private Node<T> getNode(int i) {
+	public void removeIf(MyPredicate<T> condition) {
+		for (int i = 0; i < this.size(); i++) {
+			if(condition.filter(this.get(i))) {
+				if(remove(i))
+					i--;
+			}
+		}
+	}
+	
+	public Node<T> getNode(int i) {
 		if(i == 0) return head;
 		int c = 0;
 		
@@ -130,7 +181,7 @@ public class Queue<T> {
 		return size == 0;
 	}
 	
-	public void forEach(MyConsumer<T> consumer) {
+	public synchronized void forEach(MyConsumer<T> consumer) {
 		for(int i = 0; i < size; i++) {
 			consumer.action(get(i));
 		}

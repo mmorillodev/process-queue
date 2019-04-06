@@ -7,59 +7,63 @@ import java.util.Scanner;
 
 import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
-import br.com.aps_so.interfaces.OnProcessChangeListener;
 
-public class Main {
+public class Main implements Process.OnProcessChangeListener, Process.OnFinishProcessListener {
 	private final String BASE_PATH = "C:\\Users\\mathe\\Documents\\";
-	private final long QUANTUM_MILIS = 3500;
-	public Queue<Process> readyQueue;
+	private final int QUANTUM = 4;
+	private final long QUANTUM_MILIS = 0;
+	private Queue<Process> readyQueue;
 	
 	public static void main(String[] args) throws IOException {
-		println("=============================================");
-		println("\t\tRound Robin\t\t");
-		println("=============================================");
-		new Main().deploy();
+		System.out.println("\n********************************************\n");
+		System.out.println("********* Escalonador Round-Robin **********\n");
+		System.out.println("********************************************\n");
+		try {
+			new Main().deploy();
+		} catch(FileNotFoundException e) {
+			System.out.print("File not found: " + e.getMessage());
+		}
+		
 	}
 	
 	public void deploy() throws FileNotFoundException {
-		Scanner scanner = new Scanner(System.in);
 		readyQueue = new Queue<>();
+		
 		getFileInfo(new File(BASE_PATH + "\\processes.txt"));
 		
-		print("Type the quantum for each process: ");
-		int quantum = scanner.nextInt();
-		scanner.close();
-
-		Scheduler manager = new Scheduler(readyQueue, quantum, QUANTUM_MILIS);
+		Scheduler manager = new Scheduler(readyQueue, QUANTUM, QUANTUM_MILIS);
 		
-		manager.setOnProcessChangeListener(new OnProcessChangeListener(){
-			@Override
-			public void onChange(Process newProcess){
-				println("=======New process entry.========");
-				println(newProcess.toString());
-			}
-		});
+		manager.setOnProcessChangeListener(this);
+		manager.setOnProcessFinishListener(this);
+		
 		manager.start();
 	}
 	
-	public Queue<Process> getFileInfo(File file) throws FileNotFoundException {
+	public void getFileInfo(File file) throws FileNotFoundException {
 		Scanner fileDatas = new Scanner(file);
-		MyList<String> aux = new MyList<>();
+		MyList<String> currentProcess = new MyList<>();
 		
 		while(fileDatas.hasNext()) {
-			String aux_ = fileDatas.nextLine();
-			if(aux_.equals("") || !fileDatas.hasNext()) {
-				if(!fileDatas.hasNext()) aux.push(aux_);
-				readyQueue.add(new Process(aux));
-				aux.clear();
+			String line = fileDatas.nextLine();
+			if(line.equals("") || !fileDatas.hasNext()) {
+				if(!fileDatas.hasNext()) currentProcess.push(line);
+				readyQueue.add(new Process(currentProcess));
+				currentProcess.clear();
 				continue;
 			}
-			aux.push(aux_);
+			currentProcess.push(line);
 		}
-		
-		return readyQueue;
+		fileDatas.close();
 	}
-	
-	public static void print(String str) {System.out.print(str);}
-	public static void println(String str) {System.out.println(str);}
+
+	@Override
+	public void onChange(Process newProcess, int currentTime, Queue<Process> readyQueue) {
+		System.out.println("\nTempo " + currentTime + ":\n CPU -> " + newProcess.getName() + "\n Fila -> " + readyQueue.toString());
+	}
+
+	@Override
+	public void onFinish(Process oldProcess, int currentTime) {
+		System.out.println(" Fim do processo " + oldProcess.getName());
+		
+	}
 }

@@ -1,28 +1,31 @@
 package br.com.aps_so.process_managers;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
-
 import  br.com.aps_so.lists.*;
+import br.com.aps_so.process_managers.Process;
 
 public class Process{
 	private String name;
-	private int priority;
 	private boolean hasIO;
-	private int[] ioArrivals;
-	private int duration, arrival;
+	private Queue<Integer> ioArrivals;
+	private int remainingBrust, arrival, priority, waitTime, turnAround, totalBrust;
 	
 	public Process(MyList<String> fileValues) {
 		setName(fileValues.get(0));
-		setDuration(Integer.parseInt(fileValues.get(1)));
+		setBrust(Integer.parseInt(fileValues.get(1)));
+		setRemainingBrust(getBrust());
 		setArrival(Integer.parseInt(fileValues.get(2)));
 		hasIO(fileValues.get(3).equalsIgnoreCase("SIM") ? true : false);
 		if(hasIO()) {
 			setIOIntervals(toIntArray(fileValues.get(4).split(" ")));
 		}
 		else
-			ioArrivals = new int[0];
+			ioArrivals = new Queue<>();
+	}
+	
+	public Process(String name, int priority){
+		this.name = name;
+		this.priority = priority;
+		ioArrivals = new Queue<>();
 	}
 	
 	public void hasIO(boolean hasIO) {
@@ -37,22 +40,41 @@ public class Process{
 		this.arrival = arrival;
 	}
 	
-	public void setIOIntervals(int[] intervals) {
+	public int getArrival() {
+		return arrival;
+	}
+	
+	public void setIOIntervals(Integer[] intervals) {
 		if(hasIO)
-			this.ioArrivals = intervals;
+			this.ioArrivals = new Queue<>(intervals);
 	}
 	
-	public Process(String name, int priority){
-		this.name = name;
-		this.priority = priority;
+	public Queue<Integer> getIOIntervals() {
+		return ioArrivals;
 	}
 	
-	public void setDuration(int duration) {
-		this.duration = duration;
+	public void setBrust(int duration) {
+		totalBrust = duration;
 	}
 	
-	public double getDuration() {
-		return duration;
+	public int getBrust() {
+		return totalBrust;
+	}
+	
+	public void setRemainingBrust(int duration) {
+		this.remainingBrust = duration;
+	}
+	
+	public int getRemainingBrust() {
+		return remainingBrust;
+	}
+	
+	public void setTurnAround(int turnAround) {
+		this.turnAround = turnAround;
+	}
+	
+	public int getTurnAround() {
+		return turnAround;
 	}
 	
 	public void setName(String name) {
@@ -67,11 +89,18 @@ public class Process{
 		this.priority = priority;
 	}
 	
+	public void setWaitTime(int waitTime) {
+		this.waitTime = waitTime;
+	}
+	
+	public int getWaitTime() {
+		return waitTime;
+	}
+	
 	public String toString() {
 		return "Name: " + name + 
-				", Priority: " + priority + 
 				", Arrival: " + arrival + 
-				", Duration: " + duration + 
+				", Duration: " + remainingBrust + 
 				", Has I/O: " + hasIO + 
 				", I/O moments: " + arrToString();
 	}
@@ -83,19 +112,26 @@ public class Process{
 	private String arrToString() {
 		StringBuffer str = new StringBuffer();
 		str.append("[");
-		for(int i = 0; i < ioArrivals.length; i++) {
-			str.append(ioArrivals[i] + (i == ioArrivals.length-1 ? "" : ", "));
+		for(int i = 0; i < ioArrivals.size(); i++) {
+			str.append(ioArrivals.get(i) + (i == ioArrivals.size()-1 ? "" : ", "));
 		}
 		return str.append("]").toString();
 	}
 	
-	private int[] toIntArray(String[] arr) {
-		int[] newArr = new int[arr.length];
+	private Integer[] toIntArray(String[] arr) {
+		Integer[] newArr = new Integer[arr.length];
 		
 		for(int i = 0; i < newArr.length; i++) {
 			newArr[i] = Integer.parseInt(arr[i]);
 		}
 		
 		return newArr;
+	}
+	
+	public interface OnFinishProcessListener{
+		public void onFinish(Process oldProcess, int currentTime);
+	}
+	public interface OnProcessChangeListener{
+		public void onChange(Process newProcess, int currentTime, Queue<Process> raedyQueue);
 	}
 }

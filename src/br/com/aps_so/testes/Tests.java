@@ -4,16 +4,34 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import br.com.aps_so.interfaces.MyPredicate;
 import br.com.aps_so.lists.*;
-import br.com.aps_so.process_managers.Main;
 import br.com.aps_so.process_managers.Process;
 
 public class Tests {
 	public static void main(String[] args) throws FileNotFoundException {
-		Queue<Process> queue = getFileInfo(new File("C:\\Users\\mathe\\Documents\\processes.txt"));
-		queue.forEach(System.out::println);
-		System.out.println(queue.size());
+		Queue<Process> wait = getFileInfo(new File("C:\\Users\\nescara\\Documents\\processes.txt"));
+		Queue<Process> ready = new Queue<>();
 		
+		ready.add(wait.get(0));
+		ready.add(wait.get(1));
+		ready.add(wait.get(2));
+		
+		wait.removeIf(new MyPredicate<Process>() {
+			
+			@Override
+			public boolean filter(Process t) {
+				if(ready.contains(t)) {
+					return true;
+				}
+				return false;
+			}
+		});
+		Process p = new Process("dasd", 0);
+		Process p2 = new Process("dassd", 0);
+		Process p3 = new Process("dsda", 0);
+
+		System.out.println(wait.toString());
 	}
 	
 	public static Queue<Process> getFileInfo(File file) throws FileNotFoundException {
@@ -31,7 +49,7 @@ public class Tests {
 			}
 			aux.push(aux_);
 		}
-		
+		fileDatas.close();
 		return readyQueue;
 	}
 }
