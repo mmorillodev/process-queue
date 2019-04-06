@@ -8,13 +8,13 @@ import br.com.aps_so.lists.Queue;
 public class Scheduler extends Thread implements MyComparator<Process>{
 	private int quantum, acmWait, acmTurnAround;
 	private Process.OnProcessStateChangeListeners changeCallback;
-	private Queue<Process> requestQueue, waitQueue;
+	private Queue<Process> readyQueue, waitQueue;
 	private MyList<Process> finished;
 	
 	public Scheduler(Queue<Process> waitQueue, int quantum) {
 		this.waitQueue = waitQueue;
 		this.quantum = quantum;
-		requestQueue = new Queue<>();
+		readyQueue = new Queue<>();
 		finished = new MyList<>();
 		acmWait = 0;
 		acmTurnAround = 0;
@@ -31,10 +31,10 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		int totalTime = 0;
 		Process currentProcess;
 		
-		while(!(waitQueue.isEmpty() && requestQueue.isEmpty())) {
+		while(!(waitQueue.isEmpty() && readyQueue.isEmpty())) {
 			updateRequestQueue(totalTime);
-			if(!requestQueue.isEmpty()) {
-				currentProcess = requestQueue.unQueue();
+			if(!readyQueue.isEmpty()) {
+				currentProcess = readyQueue.unQueue();
 				
 				int condition = (currentProcess.getRemainingBrust() < quantum  ? currentProcess.getRemainingBrust() : quantum);
 				
@@ -49,7 +49,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 					}
 					
 					currentProcess.setRemainingBrust(currentProcess.getRemainingBrust()-1);
-					changeCallback.onExecuting(currentProcess, totalTime++, requestQueue);
+					changeCallback.onExecuting(currentProcess, totalTime++, readyQueue);
 				}
 				if(currentProcess.getRemainingBrust() > 0) {
 					waitQueue.add(currentProcess);
@@ -90,7 +90,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		for(int i = 0; i < waitQueue.size(); i++) {
 			current = waitQueue.get(i);
 			if(current.getArrival() <= totalTime) {
-				requestQueue.addIfNotExist(current);
+				readyQueue.addIfNotExist(current);
 				waitQueue.remove(i);
 				i--;
 			}
