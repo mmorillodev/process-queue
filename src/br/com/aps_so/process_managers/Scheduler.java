@@ -55,12 +55,10 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 							break;
 						}
 					}
-					if(changeCallback != null)
-						changeCallback.onChange(currentProcess, totalTime, requestQueue);
 					
 					currentProcess.setRemainingBrust(currentProcess.getRemainingBrust()-1);
 					delay();
-					totalTime++;
+					changeCallback.onChange(currentProcess, ++totalTime, requestQueue);
 				}
 				if(currentProcess.getRemainingBrust() > 0) {
 					waitQueue.add(currentProcess);
@@ -69,8 +67,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 					currentProcess.setWaitTime(totalTime - (currentProcess.getArrival() + currentProcess.getBrust()));
 					currentProcess.setTurnAround(totalTime - currentProcess.getArrival());
 					
-					if(finishCallback != null)
-						finishCallback.onFinish(currentProcess, totalTime);
+					finishCallback.onFinish(currentProcess, totalTime);
 					
 					finished.push(currentProcess);
 				}
