@@ -44,23 +44,22 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 			if(!requestQueue.isEmpty()) {
 				currentProcess = requestQueue.unQueue();
 				
-				int condition = (currentProcess.getBrust() < quantum  ? currentProcess.getBrust() : quantum);
+				int condition = (currentProcess.getRemainingBrust() < quantum  ? currentProcess.getRemainingBrust() : quantum);
 //				int i = Math.abs(currentProcess.getBrust() - quantum);
 				
-				for(int i = 0; i < condition; i++) {
-					updateWaitTime(currentProcess);
-					
+				for(int i = 0; i < condition; i++) {					
 					if(changeCallback != null)
 						changeCallback.onChange(currentProcess, totalTime, requestQueue);
 					
-					currentProcess.setBrust(currentProcess.getBrust()-1);
+					currentProcess.setRemainingBrust(currentProcess.getRemainingBrust()-1);
 					delay();
 					totalTime++;
 				}
-				if(currentProcess.getBrust() > 0) {
+				if(currentProcess.getRemainingBrust() > 0) {
 					waitQueue.add(currentProcess);
 				}
 				else {
+					currentProcess.setWaitTime(totalTime - (currentProcess.getArrival() + currentProcess.getBrust()));
 					currentProcess.setTurnAround(totalTime - currentProcess.getArrival());
 					
 					if(finishCallback != null)
@@ -102,17 +101,6 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 				i--;
 			}
 		}
-	}
-	
-	private void updateWaitTime(Process currentProcess) {
-		requestQueue.forEach(new MyConsumer<Process>() {
-			
-			@Override
-			public void action(Process value) {
-				if(value == currentProcess) return;
-				value.setWaitTime(currentProcess.getWaitTime()+1);
-			}
-		});
 	}
 	
 	@Override
