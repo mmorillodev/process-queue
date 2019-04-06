@@ -2,7 +2,6 @@ package br.com.aps_so.process_managers;
 
 import br.com.aps_so.interfaces.MyComparator;
 import br.com.aps_so.interfaces.MyConsumer;
-import br.com.aps_so.interfaces.MyPredicate;
 import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
@@ -19,6 +18,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		this.quantum = quantum;
 		this.quantumMilis = quantumMilis;
 		requestQueue = new Queue<>();
+		ioQueue = new Queue<Process>();
 		finished = new MyList<>();
 		acmWait = 0;
 		acmTurnAround = 0;
@@ -47,7 +47,15 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 				int condition = (currentProcess.getRemainingBrust() < quantum  ? currentProcess.getRemainingBrust() : quantum);
 //				int i = Math.abs(currentProcess.getBrust() - quantum);
 				
-				for(int i = 0; i < condition; i++) {					
+				for(int i = 0; i < condition; i++) {
+					if(currentProcess.hasIO() && currentProcess.getIOIntervals().size() > 0) {
+						if(currentProcess.getBrust() - currentProcess.getRemainingBrust() == currentProcess.getIOIntervals().getFirst()) {
+							System.out.println(" Operação de I/O de " + currentProcess.getName());
+							currentProcess.getIOIntervals().unQueue();
+							waitQueue.add(currentProcess);
+							break;
+						}
+					}
 					if(changeCallback != null)
 						changeCallback.onChange(currentProcess, totalTime, requestQueue);
 					

@@ -1,5 +1,6 @@
 package br.com.aps_so.process_managers;
 
+import br.com.aps_so.interfaces.MyComparator;
 import  br.com.aps_so.lists.*;
 import br.com.aps_so.process_managers.Process;
 
@@ -17,6 +18,14 @@ public class Process{
 		hasIO(fileValues.get(3).equalsIgnoreCase("SIM") ? true : false);
 		if(hasIO()) {
 			setIOIntervals(toIntArray(fileValues.get(4).split(" ")));
+			ioArrivals.sort(new MyComparator<Integer>() {
+				@Override
+				public int compare(Integer str, Integer str2) {
+					if(str > str2) return 1;
+					if(str < str2) return -1;
+					return 0;
+				}
+			});
 		}
 		else
 			ioArrivals = new Queue<>();
