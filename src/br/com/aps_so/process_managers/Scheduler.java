@@ -10,7 +10,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 	private long quantumMilis;
 	private Process.OnProcessChangeListener changeCallback;
 	private Process.OnFinishProcessListener finishCallback;
-	private Queue<Process> requestQueue, waitQueue, ioQueue;
+	private Queue<Process> requestQueue, waitQueue;
 	private MyList<Process> finished;
 	
 	public Scheduler(Queue<Process> waitQueue, int quantum, long quantumMilis) {
@@ -18,7 +18,6 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		this.quantum = quantum;
 		this.quantumMilis = quantumMilis;
 		requestQueue = new Queue<>();
-		ioQueue = new Queue<Process>();
 		finished = new MyList<>();
 		acmWait = 0;
 		acmTurnAround = 0;
