@@ -7,16 +7,14 @@ import br.com.aps_so.lists.Queue;
 
 public class Scheduler extends Thread implements MyComparator<Process>{
 	private int quantum, acmWait, acmTurnAround;
-	private long quantumMilis;
 	private Process.OnProcessChangeListener changeCallback;
 	private Process.OnFinishProcessListener finishCallback;
 	private Queue<Process> requestQueue, waitQueue;
 	private MyList<Process> finished;
 	
-	public Scheduler(Queue<Process> waitQueue, int quantum, long quantumMilis) {
+	public Scheduler(Queue<Process> waitQueue, int quantum) {
 		this.waitQueue = waitQueue;
 		this.quantum = quantum;
-		this.quantumMilis = quantumMilis;
 		requestQueue = new Queue<>();
 		finished = new MyList<>();
 		acmWait = 0;
@@ -44,7 +42,6 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 				currentProcess = requestQueue.unQueue();
 				
 				int condition = (currentProcess.getRemainingBrust() < quantum  ? currentProcess.getRemainingBrust() : quantum);
-//				int i = Math.abs(currentProcess.getBrust() - quantum);
 				
 				for(int i = 0; i < condition; i++) {
 					if(currentProcess.hasIO() && currentProcess.getIOIntervals().size() > 0) {
@@ -57,8 +54,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 					}
 					
 					currentProcess.setRemainingBrust(currentProcess.getRemainingBrust()-1);
-					delay();
-					changeCallback.onChange(currentProcess, ++totalTime, requestQueue);
+					changeCallback.onChange(currentProcess, totalTime++, requestQueue);
 				}
 				if(currentProcess.getRemainingBrust() > 0) {
 					waitQueue.add(currentProcess);
@@ -72,10 +68,9 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 					finished.push(currentProcess);
 				}
 			}
-			else {
-				delay();
+			
+			else 
 				totalTime++;
-			}
 		}
 		
 		System.out.println("\n*****************************************\n");
@@ -112,12 +107,5 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		if(p1.getArrival() > p2.getArrival()) return 1;
 		else if (p1.getArrival() < p2.getArrival()) return -1;
 		return 0;
-	}
-	
-	private void delay() {
-		if(quantumMilis == 0) return;
-		try {
-			sleep(quantumMilis);
-		} catch(InterruptedException e) {}
 	}
 }

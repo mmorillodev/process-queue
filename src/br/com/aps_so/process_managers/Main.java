@@ -11,7 +11,6 @@ import br.com.aps_so.lists.Queue;
 public class Main implements Process.OnProcessChangeListener, Process.OnFinishProcessListener {
 	private final String BASE_PATH = "C:\\Users\\mathe\\Documents\\";
 	private final int QUANTUM = 4;
-	private final long QUANTUM_MILIS = 0;
 	private Queue<Process> readyQueue;
 	
 	public static void main(String[] args) throws IOException {
@@ -31,7 +30,7 @@ public class Main implements Process.OnProcessChangeListener, Process.OnFinishPr
 		
 		getFileInfo(new File(BASE_PATH + "\\processes.txt"));
 		
-		Scheduler manager = new Scheduler(readyQueue, QUANTUM, QUANTUM_MILIS);
+		Scheduler manager = new Scheduler(readyQueue, QUANTUM);
 		
 		manager.setOnProcessChangeListener(this);
 		manager.setOnProcessFinishListener(this);
