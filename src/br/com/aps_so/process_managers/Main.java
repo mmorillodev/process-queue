@@ -8,10 +8,9 @@ import java.util.Scanner;
 import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
-public class Main implements Process.OnProcessChangeListener, Process.OnFinishProcessListener {
+public class Main implements Process.OnProcessStateChangeListeners {
 	private final String BASE_PATH = "C:\\Users\\mathe\\Documents\\";
 	private final int QUANTUM = 4;
-	private Queue<Process> readyQueue;
 	
 	public static void main(String[] args) throws IOException {
 		System.out.println("\n********************************************\n");
@@ -25,44 +24,46 @@ public class Main implements Process.OnProcessChangeListener, Process.OnFinishPr
 		
 	}
 	
-	public void deploy() throws FileNotFoundException {
-		readyQueue = new Queue<>();
+	public void deploy() throws FileNotFoundException {		
+		Scheduler manager = new Scheduler(getFileInfo(new File(BASE_PATH + "\\processes.txt")), QUANTUM);
 		
-		getFileInfo(new File(BASE_PATH + "\\processes.txt"));
-		
-		Scheduler manager = new Scheduler(readyQueue, QUANTUM);
-		
-		manager.setOnProcessChangeListener(this);
-		manager.setOnProcessFinishListener(this);
+		manager.setOnProcessStateChangeListeners(this);
 		
 		manager.start();
 	}
 	
-	public void getFileInfo(File file) throws FileNotFoundException {
+	public Queue<Process> getFileInfo(File file) throws FileNotFoundException {
 		Scanner fileDatas = new Scanner(file);
 		MyList<String> currentProcess = new MyList<>();
+		Queue<Process> queue = new Queue<>();
 		
 		while(fileDatas.hasNext()) {
 			String line = fileDatas.nextLine();
 			if(line.equals("") || !fileDatas.hasNext()) {
 				if(!fileDatas.hasNext()) currentProcess.push(line);
-				readyQueue.add(new Process(currentProcess));
+				queue.add(new Process(currentProcess));
 				currentProcess.clear();
 				continue;
 			}
 			currentProcess.push(line);
 		}
 		fileDatas.close();
+		return queue;
 	}
 
 	@Override
-	public void onChange(Process newProcess, int currentTime, Queue<Process> readyQueue) {
+	public void onExecuting(Process newProcess, int currentTime, Queue<Process> readyQueue) {
 		System.out.println("\nTempo " + currentTime + ":\n CPU -> " + newProcess.getName() + "\n Fila -> " + readyQueue.toString());
 	}
 
 	@Override
-	public void onFinish(Process oldProcess, int currentTime) {
+	public void onFinish(Process oldProcess) {
 		System.out.println(" Fim do processo " + oldProcess.getName());
 		
+	}
+
+	@Override
+	public void onInterruptedByIO(String processName) {
+		System.out.println(" Operação de I/O de " + processName);
 	}
 }

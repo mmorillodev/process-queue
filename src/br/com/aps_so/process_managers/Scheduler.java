@@ -7,8 +7,7 @@ import br.com.aps_so.lists.Queue;
 
 public class Scheduler extends Thread implements MyComparator<Process>{
 	private int quantum, acmWait, acmTurnAround;
-	private Process.OnProcessChangeListener changeCallback;
-	private Process.OnFinishProcessListener finishCallback;
+	private Process.OnProcessStateChangeListeners changeCallback;
 	private Queue<Process> requestQueue, waitQueue;
 	private MyList<Process> finished;
 	
@@ -21,12 +20,8 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		acmTurnAround = 0;
 	}
 	
-	public void setOnProcessChangeListener(Process.OnProcessChangeListener changeCallback) {
+	public void setOnProcessStateChangeListeners(Process.OnProcessStateChangeListeners changeCallback) {
 		this.changeCallback = changeCallback;
-	}
-	
-	public void setOnProcessFinishListener(Process.OnFinishProcessListener finishCallback) {
-		this.finishCallback = finishCallback;
 	}
 	
 	@Override
@@ -46,7 +41,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 				for(int i = 0; i < condition; i++) {
 					if(currentProcess.hasIO() && currentProcess.getIOIntervals().size() > 0) {
 						if(currentProcess.getBrust() - currentProcess.getRemainingBrust() == currentProcess.getIOIntervals().getFirst()) {
-							System.out.println(" Operação de I/O de " + currentProcess.getName());
+							changeCallback.onInterruptedByIO(currentProcess.getName());
 							currentProcess.getIOIntervals().unQueue();
 							waitQueue.add(currentProcess);
 							break;
@@ -54,7 +49,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 					}
 					
 					currentProcess.setRemainingBrust(currentProcess.getRemainingBrust()-1);
-					changeCallback.onChange(currentProcess, totalTime++, requestQueue);
+					changeCallback.onExecuting(currentProcess, totalTime++, requestQueue);
 				}
 				if(currentProcess.getRemainingBrust() > 0) {
 					waitQueue.add(currentProcess);
@@ -63,7 +58,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 					currentProcess.setWaitTime(totalTime - (currentProcess.getArrival() + currentProcess.getBrust()));
 					currentProcess.setTurnAround(totalTime - currentProcess.getArrival());
 					
-					finishCallback.onFinish(currentProcess, totalTime);
+					changeCallback.onFinish(currentProcess);
 					
 					finished.push(currentProcess);
 				}
