@@ -93,6 +93,10 @@ public class Queue<T> {
 			if(current.data == obj) return c;
 		}
 		return -1;
+		
+		
+		
+		
 	}
 	
 	public boolean contains(T object) {

@@ -1,5 +1,6 @@
 package br.com.aps_so.process_managers;
 
+import br.com.aps_so.interfaces.MyComparator;
 import  br.com.aps_so.lists.*;
 import br.com.aps_so.process_managers.Process;
 
@@ -7,15 +8,24 @@ public class Process{
 	private String name;
 	private boolean hasIO;
 	private Queue<Integer> ioArrivals;
-	private int brustTime, arrival, priority, waitTime, turnAround;
+	private int remainingBrust, arrival, priority, waitTime, turnAround, totalBrust;
 	
 	public Process(MyList<String> fileValues) {
 		setName(fileValues.get(0));
 		setBrust(Integer.parseInt(fileValues.get(1)));
+		setRemainingBrust(getBrust());
 		setArrival(Integer.parseInt(fileValues.get(2)));
 		hasIO(fileValues.get(3).equalsIgnoreCase("SIM") ? true : false);
 		if(hasIO()) {
 			setIOIntervals(toIntArray(fileValues.get(4).split(" ")));
+			ioArrivals.sort(new MyComparator<Integer>() {
+				@Override
+				public int compare(Integer str, Integer str2) {
+					if(str > str2) return 1;
+					if(str < str2) return -1;
+					return 0;
+				}
+			});
 		}
 		else
 			ioArrivals = new Queue<>();
@@ -53,11 +63,19 @@ public class Process{
 	}
 	
 	public void setBrust(int duration) {
-		this.brustTime = duration;
+		totalBrust = duration;
 	}
 	
 	public int getBrust() {
-		return brustTime;
+		return totalBrust;
+	}
+	
+	public void setRemainingBrust(int duration) {
+		this.remainingBrust = duration;
+	}
+	
+	public int getRemainingBrust() {
+		return remainingBrust;
 	}
 	
 	public void setTurnAround(int turnAround) {
@@ -91,7 +109,7 @@ public class Process{
 	public String toString() {
 		return "Name: " + name + 
 				", Arrival: " + arrival + 
-				", Duration: " + brustTime + 
+				", Duration: " + remainingBrust + 
 				", Has I/O: " + hasIO + 
 				", I/O moments: " + arrToString();
 	}
@@ -119,10 +137,9 @@ public class Process{
 		return newArr;
 	}
 	
-	public interface OnFinishProcessListener{
-		public void onFinish(Process oldProcess, int currentTime);
-	}
-	public interface OnProcessChangeListener{
-		public void onChange(Process newProcess, int currentTime, Queue<Process> raedyQueue);
+	public interface OnProcessStateChangeListeners{
+		public void onFinish(Process oldProcess);
+		public void onExecuting(Process newProcess, int currentTime, Queue<Process> raedyQueue);
+		public void onInterruptedByIO(String processName);
 	}
 }
