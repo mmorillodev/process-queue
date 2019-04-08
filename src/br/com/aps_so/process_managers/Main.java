@@ -13,6 +13,7 @@ import br.com.aps_so.lists.Queue;
 public class Main implements Process.OnProcessStateChangeListeners {
 	//Constante de quantum para cada process
 	private final int QUANTUM = 4;
+	private final String USER = "Nescara";
 	
 	public static void main(String[] args) throws IOException {
 		System.out.println("\n********************************************\n");
@@ -39,7 +40,7 @@ public class Main implements Process.OnProcessStateChangeListeners {
 			manager = new Scheduler(getFileInfo(new File(m.group(0) + "\\Documents\\processes.txt")), QUANTUM);
 	
 		else 
-			manager = new Scheduler(getFileInfo(new File("C:\\Users\\mathe\\documents\\processes.txt")), QUANTUM);
+			manager = new Scheduler(getFileInfo(new File("C:\\Users\\"+ USER +"\\documents\\processes.txt")), QUANTUM);
 			
 		manager.setOnProcessStateChangeListeners(this);
 		//Inicia o escalonador
