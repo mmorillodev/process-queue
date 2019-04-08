@@ -19,7 +19,7 @@ public class Main implements Process.OnProcessStateChangeListeners {
 		System.out.println("********* Escalonador Round-Robin **********\n");
 		System.out.println("********************************************\n");
 		
-		Pattern p = Pattern.compile("[A-Z]:\\\\[Uu]sers\\\\(\\w*)");
+		Pattern p = Pattern.compile("[A-Z]:\\\\([Uu]sers|[Uu]su.rios)\\\\(\\w*)");
 		Matcher m = p.matcher(System.getProperty("user.dir"));
 		
 		if(m.find()) {
