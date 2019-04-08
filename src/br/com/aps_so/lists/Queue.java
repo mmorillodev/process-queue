@@ -51,29 +51,10 @@ public class Queue<T> {
 		return v;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public T unQueueByPriority() {
-		if(isEmpty()) return null;
-		if(!(head.data instanceof Prioriser))
-			throw new ImplementationNotFoundException(head.data.getClass() + " must implement Prioriser");
-		
-		Prioriser maxPriority = (Prioriser) head.data;
-		Prioriser next;
-		
-		for(int i = 1; i < size; i++) {
-			next = (Prioriser) get(i); 
-			if(next.getPriority() > maxPriority.getPriority()) {
-				maxPriority = next;
-			}
-		}
-		
-		T statement = (T) maxPriority;
-		remove(statement);
-		return statement;
-	}
-	
 	public T get(int i) {
+		if(i >= size || i < 0) return null;
 		if(i == 0) return head.data;
+		if(i == size-1) return last.data;
 		int c = 1;
 				
 		for(Node<T> current = head.nextNode; current != null; current = current.nextNode, c++) {	
@@ -83,20 +64,16 @@ public class Queue<T> {
 		return null;
 	}
 	
-	public Node<T> getFirstNodeNext() {
-		return head.nextNode;
-	}
-	
 	public int get(T obj) {
+		if(obj == null) return -1;
+		if(obj == head.data) return 0;
+		if(obj == last.data) return size-1;
+		
 		int c = 0;
 		for(Node<T> current = head; current != null; current = current.nextNode, c++) {	
 			if(current.data == obj) return c;
 		}
 		return -1;
-		
-		
-		
-		
 	}
 	
 	public boolean contains(T object) {
@@ -156,8 +133,10 @@ public class Queue<T> {
 		}
 	}
 	
-	public Node<T> getNode(int i) {
+	private Node<T> getNode(int i) {
+		if(i >= size) return null;
 		if(i == 0) return head;
+		if(i == size-1) return last;
 		int c = 0;
 		
 		for(Node<T> current = head; current != null; c++, current = current.nextNode) {
@@ -205,11 +184,12 @@ public class Queue<T> {
 		return str.append("]").toString();
 	}
 	
-	public void swapItems(int firstIndex, int secondIndex) {
+	private void swapItems(int firstIndex, int secondIndex) {
 		if(firstIndex >= size || secondIndex >= size) return;
 		if(firstIndex == secondIndex) return;
 		
 		T data = get(firstIndex);
+		
 		getNode(firstIndex).data = getNode(secondIndex).data;
 		getNode(secondIndex).data = data;
 	}
