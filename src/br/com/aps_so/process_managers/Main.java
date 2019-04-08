@@ -4,18 +4,27 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
 public class Main implements Process.OnProcessStateChangeListeners {
-	private final String BASE_PATH = "C:\\Users\\mathe\\Documents\\";
+	private static String basePath;
 	private final int QUANTUM = 4;
 	
 	public static void main(String[] args) throws IOException {
 		System.out.println("\n********************************************\n");
 		System.out.println("********* Escalonador Round-Robin **********\n");
 		System.out.println("********************************************\n");
+		
+		Pattern p = Pattern.compile("[A-Z]:\\\\[Uu]sers\\\\(\\w*)");
+		Matcher m = p.matcher(System.getProperty("user.dir"));
+		
+		if(m.find()) {
+			basePath = m.group(0) + "\\Documents\\processes.txt";
+		}
 		try {
 			new Main().deploy();
 		} catch(FileNotFoundException e) {
@@ -25,7 +34,7 @@ public class Main implements Process.OnProcessStateChangeListeners {
 	}
 	
 	public void deploy() throws FileNotFoundException {		
-		Scheduler manager = new Scheduler(getFileInfo(new File(BASE_PATH + "\\processes.txt")), QUANTUM);
+		Scheduler manager = new Scheduler(getFileInfo(new File(basePath)), QUANTUM);
 		
 		manager.setOnProcessStateChangeListeners(this);
 		
