@@ -5,12 +5,14 @@ import br.com.aps_so.interfaces.MyConsumer;
 import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
-public class Scheduler extends Thread implements MyComparator<Process>{
+public class Scheduler extends Thread implements MyComparator<Process> {
+	//Declara todas as variaveis que serão utilizadas
 	private int quantum, acmWait, acmTurnAround;
 	private Process.OnProcessStateChangeListeners changeCallback;
 	private Queue<Process> readyQueue, waitQueue;
 	private MyList<Process> finished;
 	
+	//Construtor que recebe uma fila de processos e a quantidade de quantum para cada processo
 	public Scheduler(Queue<Process> waitQueue, int quantum) {
 		this.waitQueue = waitQueue;
 		this.quantum = quantum;
@@ -20,17 +22,20 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		acmTurnAround = 0;
 	}
 	
+	//Metodo que setta os callback de mudança de status dos processos
 	public void setOnProcessStateChangeListeners(Process.OnProcessStateChangeListeners changeCallback) {
 		this.changeCallback = changeCallback;
 	}
 	
+	//Metodo que começa o gerenciamento de processos
 	@Override
 	public void run() {
 		waitQueue.sort(this);
 		
-		int totalTime = 0;
+		int totalTime = -1;
 		Process currentProcess;
 		
+		//Enquanto a fila de espera e de pronto não estiverem vazias
 		while(!(waitQueue.isEmpty() && readyQueue.isEmpty())) {
 			updateRequestQueue(totalTime);
 			if(!readyQueue.isEmpty()) {
@@ -44,7 +49,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 						if(currentProcess.getBrust() - currentProcess.getRemainingBrust() == currentProcess.getIOIntervals().getFirst()) {
 							changeCallback.onInterruptedByIO(currentProcess.getName());
 							currentProcess.getIOIntervals().unQueue();
-							waitQueue.add(currentProcess);
+							readyQueue.add(currentProcess);
 							break;
 						}
 					}
@@ -64,11 +69,11 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 					finished.push(currentProcess);
 				}
 			}
-			
-			else 
+			else
 				totalTime++;
 		}
 		
+		//Todos os processos terminados
 		System.out.println("\n*****************************************\n");
 		System.out.println("* Encerrando simulacao de escalonamento *\n");
 		System.out.println("*****************************************\n");
@@ -86,6 +91,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		System.out.println("\nMédia de waiting time: " + acmWait/finished.length() + "\nMédia de turnAround: " + acmTurnAround/finished.length());
 	}
 	
+	//Metodo que atualiza a fila de pronto baseado no tempo de chegada dos processos e no tempo atual.
 	private void updateRequestQueue(int totalTime) {
 		Process current;
 		for(int i = 0; i < waitQueue.size(); i++) {
@@ -98,6 +104,10 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 		}
 	}
 	
+	//Implementação do metodo compare para ser mandado como parametro no metodo sort.
+	//se a chegada de p1 for maior que p2, retorna 1
+	//se der igualdade, retorna 0
+	//Por outro lado, retorna -1, então troca a posição dos dois itens
 	@Override
 	public int compare(Process p1, Process p2) {
 		if(p1.getArrival() > p2.getArrival()) return 1;

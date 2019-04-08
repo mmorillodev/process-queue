@@ -11,7 +11,7 @@ import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
 public class Main implements Process.OnProcessStateChangeListeners {
-	private static String basePath;
+	//Constante de quantum para cada process
 	private final int QUANTUM = 4;
 	
 	public static void main(String[] args) throws IOException {
@@ -19,13 +19,8 @@ public class Main implements Process.OnProcessStateChangeListeners {
 		System.out.println("********* Escalonador Round-Robin **********\n");
 		System.out.println("********************************************\n");
 		
-		Pattern p = Pattern.compile("[A-Z]:\\\\([Uu]sers|[Uu]su.rios)\\\\(\\w*)");
-		Matcher m = p.matcher(System.getProperty("user.dir"));
-		
-		if(m.find()) {
-			basePath = m.group(0) + "\\Documents\\processes.txt";
-		}
 		try {
+			//Inicia o processo
 			new Main().deploy();
 		} catch(FileNotFoundException e) {
 			System.out.print("File not found: " + e.getMessage());
@@ -34,13 +29,24 @@ public class Main implements Process.OnProcessStateChangeListeners {
 	}
 	
 	public void deploy() throws FileNotFoundException {		
-		Scheduler manager = new Scheduler(getFileInfo(new File(basePath)), QUANTUM);
+		//Compila uma expressão regex que será usado para pegar o path até a pasta documents do computador
+		Pattern p = Pattern.compile("[A-Z]:\\\\([Uu]sers|[Uu]su.rios)\\\\(\\w*)");
+		Matcher m = p.matcher(System.getProperty("user.dir"));
 		
+		//Instancia o gerenciador da fila de processos, passando a fila de processos e o quantum
+		Scheduler manager;
+		if(m.find()) 
+			manager = new Scheduler(getFileInfo(new File(m.group(0) + "\\Documents\\processes.txt")), QUANTUM);
+	
+		else 
+			manager = new Scheduler(getFileInfo(new File("C:\\Users\\mathe\\documents\\processes.txt")), QUANTUM);
+			
 		manager.setOnProcessStateChangeListeners(this);
-		
+		//Inicia o escalonador
 		manager.start();
 	}
 	
+	//Metodo responsável por extrair os dados do arquivo e converte-lo para uma fila de processos
 	public Queue<Process> getFileInfo(File file) throws FileNotFoundException {
 		Scanner fileDatas = new Scanner(file);
 		MyList<String> currentProcess = new MyList<>();
@@ -60,6 +66,8 @@ public class Main implements Process.OnProcessStateChangeListeners {
 		return queue;
 	}
 
+	//Metodos implementados da interface Process.OnProcessStateChangeListeners,
+	//possibilitando a passagem deste mesmo objeto ao Scheduler.setOnProcessStateChangeListeners.
 	@Override
 	public void onExecuting(Process newProcess, int currentTime, Queue<Process> readyQueue) {
 		System.out.println("\nTempo " + currentTime + ":\n CPU -> " + newProcess.getName() + "\n Fila -> " + readyQueue.toString());
