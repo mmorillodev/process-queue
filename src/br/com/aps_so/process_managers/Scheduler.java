@@ -39,6 +39,7 @@ public class Scheduler extends Thread implements MyComparator<Process>{
 				int condition = (currentProcess.getRemainingBrust() < quantum  ? currentProcess.getRemainingBrust() : quantum);
 				
 				for(int i = 0; i < condition; i++) {
+					updateRequestQueue(totalTime);
 					if(currentProcess.hasIO() && currentProcess.getIOIntervals().size() > 0) {
 						if(currentProcess.getBrust() - currentProcess.getRemainingBrust() == currentProcess.getIOIntervals().getFirst()) {
 							changeCallback.onInterruptedByIO(currentProcess.getName());
