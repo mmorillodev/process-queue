@@ -11,7 +11,8 @@ import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
 public class Main implements Process.OnProcessStateChangeListeners {
-	//Constante de quantum para cada process
+	//Constante de quantum para cada process e usuário default
+	//caso a busca do usuário do computador falhe
 	private final int QUANTUM = 4;
 	private final String USER = "Nescara";
 	
@@ -38,10 +39,12 @@ public class Main implements Process.OnProcessStateChangeListeners {
 		Scheduler manager;
 		if(m.find()) 
 			manager = new Scheduler(getFileInfo(new File(m.group(0) + "\\Documents\\processes.txt")), QUANTUM);
-	
+		
+		//Se não foi encontrada nenhuma ocorrência, utilizar path padrão
 		else 
-			manager = new Scheduler(getFileInfo(new File("C:\\Users\\"+ USER +"\\documents\\processes.txt")), QUANTUM);
-			
+			manager = new Scheduler(getFileInfo(new File("C:\\Users\\" + USER + "\\documents\\processes.txt")), QUANTUM);
+		
+		//setta os callbacks. this como parâmetro significa passagem deste mesmo objeto
 		manager.setOnProcessStateChangeListeners(this);
 		//Inicia o escalonador
 		manager.start();

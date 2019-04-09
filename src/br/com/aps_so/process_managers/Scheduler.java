@@ -32,7 +32,7 @@ public class Scheduler extends Thread implements MyComparator<Process> {
 	public void run() {
 		waitQueue.sort(this);
 		
-		int totalTime = -1;
+		int totalTime = 0;
 		Process currentProcess;
 		
 		//Enquanto a fila de espera e de pronto não estiverem vazias
@@ -49,18 +49,21 @@ public class Scheduler extends Thread implements MyComparator<Process> {
 						if(currentProcess.getBrust() - currentProcess.getRemainingBrust() == currentProcess.getIOIntervals().getFirst()) {
 							changeCallback.onInterruptedByIO(currentProcess.getName());
 							currentProcess.getIOIntervals().unQueue();
-							readyQueue.add(currentProcess);
+							waitQueue.add(currentProcess);
 							break;
 						}
 					}
 					
+					//Atualiza a duração restante do processo
 					currentProcess.setRemainingBrust(currentProcess.getRemainingBrust()-1);
 					changeCallback.onExecuting(currentProcess, totalTime++, readyQueue);
 				}
 				if(currentProcess.getRemainingBrust() > 0) {
+					//Processo ainda não terminado. O insira de volta na wait queue para posteriormente ser adiconado na ready queue
 					waitQueue.add(currentProcess);
 				}
 				else {
+					//Processo se encerrou
 					currentProcess.setWaitTime(totalTime - (currentProcess.getArrival() + currentProcess.getBrust()));
 					currentProcess.setTurnAround(totalTime - currentProcess.getArrival());
 					
@@ -78,6 +81,8 @@ public class Scheduler extends Thread implements MyComparator<Process> {
 		System.out.println("* Encerrando simulacao de escalonamento *\n");
 		System.out.println("*****************************************\n");
 		
+		//Itera pela lista de todos os processos e acumulam em acumuladores de wait e turn arround
+		//a fim de cálculo de média
 		finished.forEach(new MyConsumer<Process>() {
 
 			@Override
