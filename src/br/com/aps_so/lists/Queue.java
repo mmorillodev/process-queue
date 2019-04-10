@@ -182,6 +182,20 @@ public class Queue<T> {
 		return str.append("]").toString();
 	}
 	
+	public String toString(String glue) {
+		StringBuilder str = new StringBuilder();
+		str.append("[");
+		
+		if(isEmpty()) return str.append("]").toString();
+		
+		
+		for(Node<T> current = head; current != null; current = current.nextNode) {
+			str.append(current.data.toString() + (current.nextNode != null ? glue : ""));
+		}
+		
+		return str.append("]").toString();
+	}
+	
 	private void swapItems(int firstIndex, int secondIndex) {
 		if(firstIndex >= size || secondIndex >= size) return;
 		if(firstIndex == secondIndex) return;

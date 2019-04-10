@@ -111,7 +111,7 @@ public class Process{
 				", Arrival: " + arrival + 
 				", Duration: " + remainingBrust + 
 				", Has I/O: " + hasIO + 
-				", I/O moments: " + ioArrivals.toString();
+				", I/O moments: " + ioArrivals.toString(", ");
 	}
 
 	public int getPriority() {
