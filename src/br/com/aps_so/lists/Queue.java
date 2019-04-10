@@ -3,8 +3,6 @@ package br.com.aps_so.lists;
 import br.com.aps_so.interfaces.MyComparator;
 import br.com.aps_so.interfaces.MyConsumer;
 import br.com.aps_so.interfaces.MyPredicate;
-import br.com.aps_so.interfaces.Prioriser;
-import br.com.aps_so.exceptions.ImplementationNotFoundException;
 import br.com.aps_so.lists.Node;
 
 public class Queue<T> {

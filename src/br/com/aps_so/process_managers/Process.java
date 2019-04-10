@@ -111,20 +111,11 @@ public class Process{
 				", Arrival: " + arrival + 
 				", Duration: " + remainingBrust + 
 				", Has I/O: " + hasIO + 
-				", I/O moments: " + arrToString();
+				", I/O moments: " + ioArrivals.toString();
 	}
 
 	public int getPriority() {
 		return priority;
-	}
-	
-	private String arrToString() {
-		StringBuffer str = new StringBuffer();
-		str.append("[");
-		for(int i = 0; i < ioArrivals.size(); i++) {
-			str.append(ioArrivals.get(i) + (i == ioArrivals.size()-1 ? "" : ", "));
-		}
-		return str.append("]").toString();
 	}
 	
 	private Integer[] toIntArray(String[] arr) {
