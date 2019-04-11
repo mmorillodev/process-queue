@@ -14,7 +14,7 @@ public class Main implements Process.OnProcessStateChangeListeners {
 	//Constante de quantum para cada process e usuário default
 	//caso a busca do usuário do computador falhe
 	private final int QUANTUM = 4;
-	private final String USER = "Nescara";
+	private final String USER = "mathe";
 	
 	public static void main(String[] args) throws IOException {
 		System.out.println("\n********************************************\n");
