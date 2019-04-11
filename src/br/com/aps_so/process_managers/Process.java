@@ -107,7 +107,10 @@ public class Process{
 	}
 	
 	public String toString() {
-		return name + " (" + remainingBrust + ")";
+		return "Name: " + name + 
+				", Arrival: " + arrival + 
+				", Duration: " + remainingBrust + 
+				", I/O moments: " + ioArrivals.toString(", ");
 	}
 
 	public int getPriority() {
