@@ -110,7 +110,7 @@ public class Process{
 		return "Name: " + name + 
 				", Arrival: " + arrival + 
 				", Duration: " + remainingBrust + 
-				", I/O moments: " + ioArrivals.toString(", ");
+				", I/O: " + ioArrivals.toString(",");
 	}
 
 	public int getPriority() {
