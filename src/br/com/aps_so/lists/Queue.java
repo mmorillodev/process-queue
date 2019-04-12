@@ -53,10 +53,19 @@ public class Queue<T> {
 		if(i >= size || i < 0) return null;
 		if(i == 0) return head.data;
 		if(i == size-1) return last.data;
-		int c = 1;
-				
-		for(Node<T> current = head.nextNode; current != null; current = current.nextNode, c++) {	
-			if(c == i) return current.data;
+		int c;
+		
+		if(i > (size-1)/2) {
+			c = size-2;
+			for(Node<T> current = last.previousNode; current != null; current = current.previousNode, c--) {	
+				if(c == i) return current.data;
+			}
+		}
+		else {
+			c = 1;
+			for(Node<T> current = head.nextNode; current != null; current = current.nextNode, c++) {	
+				if(c == i) return current.data;
+			}
 		}
 		
 		return null;
@@ -135,10 +144,18 @@ public class Queue<T> {
 		if(i >= size) return null;
 		if(i == 0) return head;
 		if(i == size-1) return last;
-		int c = 0;
-		
-		for(Node<T> current = head; current != null; c++, current = current.nextNode) {
-			if(c == i) return current;
+		int c;
+		if(i > (size-1)/2) {
+			c = size - 2;
+			for(Node<T> current = last.previousNode; current != null; current = current.previousNode, c--) {	
+				if(c == i) return current;
+			}
+		}
+		else {
+			c = 1;
+			for(Node<T> current = head.nextNode; current != null; c++, current = current.nextNode) {
+				if(c == i) return current;
+			}
 		}
 		return null;
 	}

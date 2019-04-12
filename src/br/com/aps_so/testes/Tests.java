@@ -42,16 +42,18 @@ public class Tests {
 //		if(m.find()) {
 //			System.out.println(m.group(1));
 //		}
-		wait.sort(new MyComparator<Process>() {
-			@Override
-			public int compare(Process p1, Process p2) {
-				if(p1.getArrival() > p2.getArrival()) return -1;
-				if(p1.getArrival() < p2.getArrival()) return 1;
-				return 0;
-			}
-		});
+//		wait.sort(new MyComparator<Process>() {
+//			@Override
+//			public int compare(Process p1, Process p2) {
+//				if(p1.getArrival() > p2.getArrival()) return -1;
+//				if(p1.getArrival() < p2.getArrival()) return 1;
+//				return 0;
+//			}
+//		});
 		
 		wait.forEach(System.out::println);
+		System.out.println();
+		System.out.println(wait.get(3));
 	}
 	
 	public static Queue<Process> getFileInfo(File file) throws FileNotFoundException {
