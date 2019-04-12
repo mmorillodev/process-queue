@@ -20,7 +20,7 @@ public class Queue<T> {
 		}
 	}
 	
-	public synchronized void add(T value) {
+	public void add(T value) {
 		Node<T> newNode = new Node<T>(value);
 		if(isEmpty()) {
 			head = last = newNode;
@@ -33,7 +33,7 @@ public class Queue<T> {
 		size++;
 	}
 	
-	public synchronized boolean addIfNotExist(T value) {
+	public boolean addIfNotExist(T value) {
 		if(!contains(value)) {
 			add(value);
 			return true;

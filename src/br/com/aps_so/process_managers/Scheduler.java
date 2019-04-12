@@ -34,6 +34,7 @@ public class Scheduler extends Thread implements MyComparator<Process> {
 		
 		int totalTime = 0;
 		Process currentProcess;
+		boolean interrupted = false;
 		
 		//Enquanto a fila de espera e de pronto não estiverem vazias
 		while(!(waitQueue.isEmpty() && readyQueue.isEmpty())) {
@@ -47,9 +48,9 @@ public class Scheduler extends Thread implements MyComparator<Process> {
 					updateRequestQueue(totalTime);
 					if(currentProcess.hasIO() && currentProcess.getIOIntervals().size() > 0) {
 						if(currentProcess.getBrust() - currentProcess.getRemainingBrust() == currentProcess.getIOIntervals().getFirst()) {
-							changeCallback.onInterruptedByIO(currentProcess.getName());
 							currentProcess.getIOIntervals().unQueue();
 							waitQueue.add(currentProcess);
+							interrupted = true;
 							break;
 						}
 					}
@@ -57,6 +58,10 @@ public class Scheduler extends Thread implements MyComparator<Process> {
 					//Atualiza a duração restante do processo
 					currentProcess.setRemainingBrust(currentProcess.getRemainingBrust()-1);
 					changeCallback.onExecuting(currentProcess, totalTime++, readyQueue);
+					if(interrupted) {
+						changeCallback.onInterruptedByIO(readyQueue.getLast().getName());
+						interrupted = false;
+					}
 				}
 				if(currentProcess.getRemainingBrust() > 0) {
 					//Processo ainda não terminado. O insira de volta na wait queue para posteriormente ser adiconado na ready queue

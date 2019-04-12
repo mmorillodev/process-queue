@@ -11,8 +11,8 @@ import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
 public class Main implements Process.OnProcessStateChangeListeners {
-	//Constante de quantum para cada process e usuário default
-	//caso a busca do usuário do computador falhe
+	//QUANTUM - Constante de quantum para cada process e usuário default
+	//USER - caso a busca do usuário do computador falhe
 	private final int QUANTUM = 4;
 	private final String USER = "mathe";
 	
