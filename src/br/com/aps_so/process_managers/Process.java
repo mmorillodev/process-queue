@@ -129,7 +129,8 @@ public class Process{
 	
 	public interface OnProcessStateChangeListeners{
 		public void onFinish(Process oldProcess);
-		public void onExecuting(Process newProcess, int currentTime, Queue<Process> raedyQueue);
+		public void onArrivedInCPU(Process newProcess, Queue<Process> raedyQueue);
 		public void onInterruptedByIO(String processName);
+		public void onArrivedInReadyQueue(String processName);
 	}
 }

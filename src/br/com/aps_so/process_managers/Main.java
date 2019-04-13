@@ -73,18 +73,23 @@ public class Main implements Process.OnProcessStateChangeListeners {
 	//Metodos implementados da interface Process.OnProcessStateChangeListeners,
 	//possibilitando a passagem deste mesmo objeto ao Scheduler.setOnProcessStateChangeListeners.
 	@Override
-	public void onExecuting(Process newProcess, int currentTime, Queue<Process> readyQueue) {
-		System.out.println("\nTempo " + currentTime + ":\n CPU -> " + newProcess.getName() + "\n Fila -> " + readyQueue.toString());
+	public void onArrivedInCPU(Process newProcess, Queue<Process> readyQueue) {
+		System.out.println("\n CPU -> " + newProcess.getName() + "\n Fila -> " + readyQueue.toString());
 	}
 
 	@Override
 	public void onFinish(Process oldProcess) {
-		System.out.println(" Fim do processo " + oldProcess.getName());
+		System.out.println(" Ultima execução de " + oldProcess.getName());
 		
 	}
 
 	@Override
 	public void onInterruptedByIO(String processName) {
-		System.out.println(" Operação de I/O de " + processName);
+		System.out.print(" Operação de I/O de " + processName);
+	}
+	
+	@Override
+	public void onArrivedInReadyQueue(String processName) {
+		 System.out.println(" Chegada do processo " + processName);
 	}
 }
