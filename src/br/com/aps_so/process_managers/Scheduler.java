@@ -113,8 +113,6 @@ public class Scheduler extends Thread implements MyComparator<Process> {
 			current = waitQueue.get(i);
 			if(current.getArrival() <= totalTime) {
 				readyQueue.addIfNotExist(current);
-				if(current.getArrival() == totalTime) 
-					changeCallback.onArrivedInReadyQueue(current.getName());
 				waitQueue.remove(i);
 				i--;
 			}

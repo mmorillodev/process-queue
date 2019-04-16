@@ -131,6 +131,5 @@ public class Process{
 		public void onFinish(Process oldProcess);
 		public void onArrivedInCPU(Process newProcess, Queue<Process> raedyQueue);
 		public void onInterruptedByIO(String processName);
-		public void onArrivedInReadyQueue(String processName);
 	}
 }

@@ -87,9 +87,4 @@ public class Main implements Process.OnProcessStateChangeListeners {
 	public void onInterruptedByIO(String processName) {
 		System.out.print(" Operação de I/O de " + processName);
 	}
-	
-	@Override
-	public void onArrivedInReadyQueue(String processName) {
-		 System.out.println(" Chegada do processo " + processName);
-	}
 }
