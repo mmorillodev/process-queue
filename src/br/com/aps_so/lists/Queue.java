@@ -3,8 +3,6 @@ package br.com.aps_so.lists;
 import br.com.aps_so.interfaces.MyComparator;
 import br.com.aps_so.interfaces.MyConsumer;
 import br.com.aps_so.interfaces.MyPredicate;
-import br.com.aps_so.interfaces.Prioriser;
-import br.com.aps_so.exceptions.ImplementationNotFoundException;
 import br.com.aps_so.lists.Node;
 
 public class Queue<T> {
@@ -22,7 +20,7 @@ public class Queue<T> {
 		}
 	}
 	
-	public synchronized void add(T value) {
+	public void add(T value) {
 		Node<T> newNode = new Node<T>(value);
 		if(isEmpty()) {
 			head = last = newNode;
@@ -35,7 +33,7 @@ public class Queue<T> {
 		size++;
 	}
 	
-	public synchronized boolean addIfNotExist(T value) {
+	public boolean addIfNotExist(T value) {
 		if(!contains(value)) {
 			add(value);
 			return true;
@@ -55,10 +53,19 @@ public class Queue<T> {
 		if(i >= size || i < 0) return null;
 		if(i == 0) return head.data;
 		if(i == size-1) return last.data;
-		int c = 1;
-				
-		for(Node<T> current = head.nextNode; current != null; current = current.nextNode, c++) {	
-			if(c == i) return current.data;
+		int c;
+		
+		if(i > (size-1)/2) {
+			c = size-2;
+			for(Node<T> current = last.previousNode; current != null; current = current.previousNode, c--) {	
+				if(c == i) return current.data;
+			}
+		}
+		else {
+			c = 1;
+			for(Node<T> current = head.nextNode; current != null; current = current.nextNode, c++) {	
+				if(c == i) return current.data;
+			}
 		}
 		
 		return null;
@@ -137,10 +144,18 @@ public class Queue<T> {
 		if(i >= size) return null;
 		if(i == 0) return head;
 		if(i == size-1) return last;
-		int c = 0;
-		
-		for(Node<T> current = head; current != null; c++, current = current.nextNode) {
-			if(c == i) return current;
+		int c;
+		if(i > (size-1)/2) {
+			c = size - 2;
+			for(Node<T> current = last.previousNode; current != null; current = current.previousNode, c--) {	
+				if(c == i) return current;
+			}
+		}
+		else {
+			c = 1;
+			for(Node<T> current = head.nextNode; current != null; c++, current = current.nextNode) {
+				if(c == i) return current;
+			}
 		}
 		return null;
 	}
@@ -179,6 +194,20 @@ public class Queue<T> {
 		
 		for(Node<T> current = head; current != null; current = current.nextNode) {
 			str.append(current.data.toString() + (current.nextNode != null ? "; " : ""));
+		}
+		
+		return str.append("]").toString();
+	}
+	
+	public String toString(String glue) {
+		StringBuilder str = new StringBuilder();
+		str.append("[");
+		
+		if(isEmpty()) return str.append("]").toString();
+		
+		
+		for(Node<T> current = head; current != null; current = current.nextNode) {
+			str.append(current.data.toString() + (current.nextNode != null ? glue : ""));
 		}
 		
 		return str.append("]").toString();

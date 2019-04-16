@@ -6,13 +6,14 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import br.com.aps_so.interfaces.MyComparator;
 //import br.com.aps_so.interfaces.MyPredicate;
 import br.com.aps_so.lists.*;
 import br.com.aps_so.process_managers.Process;
 
 public class Tests {
 	public static void main(String[] args) throws FileNotFoundException {
-//		Queue<Process> wait = getFileInfo(new File("C:\\Users\\nescara\\Documents\\processes.txt"));
+		Queue<Process> wait = getFileInfo(new File("C:\\Users\\nescara\\Documents\\processes.txt"));
 //		Queue<Process> ready = new Queue<>();
 //		
 //		ready.add(wait.get(0));
@@ -34,13 +35,25 @@ public class Tests {
 //		Process p3 = new Process("dsda", 0);
 //
 //		System.out.println(wait.toString());
-		Pattern p = Pattern.compile("[A-Z]:\\\\[Uu]sers\\\\(\\w*)");
-		Matcher m = p.matcher(System.getProperty("user.dir"));
-		System.out.println(System.getProperty("user.dir"));
-		System.out.println(p.toString());
-		if(m.find()) {
-			System.out.println(m.group(1));
-		}
+//		Pattern p = Pattern.compile("[A-Z]:\\\\[Uu]sers\\\\(\\w*)");
+//		Matcher m = p.matcher(System.getProperty("user.dir"));
+//		System.out.println(System.getProperty("user.dir"));
+//		System.out.println(p.toString());
+//		if(m.find()) {
+//			System.out.println(m.group(1));
+//		}
+//		wait.sort(new MyComparator<Process>() {
+//			@Override
+//			public int compare(Process p1, Process p2) {
+//				if(p1.getArrival() > p2.getArrival()) return -1;
+//				if(p1.getArrival() < p2.getArrival()) return 1;
+//				return 0;
+//			}
+//		});
+		
+		wait.forEach(System.out::println);
+		System.out.println();
+		System.out.println(wait.get(3));
 	}
 	
 	public static Queue<Process> getFileInfo(File file) throws FileNotFoundException {

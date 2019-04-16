@@ -110,21 +110,11 @@ public class Process{
 		return "Name: " + name + 
 				", Arrival: " + arrival + 
 				", Duration: " + remainingBrust + 
-				", Has I/O: " + hasIO + 
-				", I/O moments: " + arrToString();
+				", I/O: " + ioArrivals.toString(",");
 	}
 
 	public int getPriority() {
 		return priority;
-	}
-	
-	private String arrToString() {
-		StringBuffer str = new StringBuffer();
-		str.append("[");
-		for(int i = 0; i < ioArrivals.size(); i++) {
-			str.append(ioArrivals.get(i) + (i == ioArrivals.size()-1 ? "" : ", "));
-		}
-		return str.append("]").toString();
 	}
 	
 	private Integer[] toIntArray(String[] arr) {
@@ -139,7 +129,7 @@ public class Process{
 	
 	public interface OnProcessStateChangeListeners{
 		public void onFinish(Process oldProcess);
-		public void onExecuting(Process newProcess, int currentTime, Queue<Process> raedyQueue);
+		public void onArrivedInCPU(Process newProcess, Queue<Process> raedyQueue);
 		public void onInterruptedByIO(String processName);
 	}
 }

@@ -11,8 +11,10 @@ import br.com.aps_so.lists.MyList;
 import br.com.aps_so.lists.Queue;
 
 public class Main implements Process.OnProcessStateChangeListeners {
-	//Constante de quantum para cada process
+	//QUANTUM - Constante de quantum para cada process e usuário default
+	//USER - caso a busca do usuário do computador falhe
 	private final int QUANTUM = 4;
+	private final String USER = "mathe";
 	
 	public static void main(String[] args) throws IOException {
 		System.out.println("\n********************************************\n");
@@ -37,10 +39,12 @@ public class Main implements Process.OnProcessStateChangeListeners {
 		Scheduler manager;
 		if(m.find()) 
 			manager = new Scheduler(getFileInfo(new File(m.group(0) + "\\Documents\\processes.txt")), QUANTUM);
-	
+		
+		//Se não foi encontrada nenhuma ocorrência, utilizar path padrão
 		else 
-			manager = new Scheduler(getFileInfo(new File("C:\\Users\\mathe\\documents\\processes.txt")), QUANTUM);
-			
+			manager = new Scheduler(getFileInfo(new File("C:\\Users\\" + USER + "\\documents\\processes.txt")), QUANTUM);
+		
+		//setta os callbacks. this como parâmetro significa passagem deste mesmo objeto
 		manager.setOnProcessStateChangeListeners(this);
 		//Inicia o escalonador
 		manager.start();
@@ -69,18 +73,18 @@ public class Main implements Process.OnProcessStateChangeListeners {
 	//Metodos implementados da interface Process.OnProcessStateChangeListeners,
 	//possibilitando a passagem deste mesmo objeto ao Scheduler.setOnProcessStateChangeListeners.
 	@Override
-	public void onExecuting(Process newProcess, int currentTime, Queue<Process> readyQueue) {
-		System.out.println("\nTempo " + currentTime + ":\n CPU -> " + newProcess.getName() + "\n Fila -> " + readyQueue.toString());
+	public void onArrivedInCPU(Process newProcess, Queue<Process> readyQueue) {
+		System.out.println("\n CPU -> " + newProcess.getName() + "\n Fila -> " + readyQueue.toString());
 	}
 
 	@Override
 	public void onFinish(Process oldProcess) {
-		System.out.println(" Fim do processo " + oldProcess.getName());
+		System.out.println(" Ultima execução de " + oldProcess.getName());
 		
 	}
 
 	@Override
 	public void onInterruptedByIO(String processName) {
-		System.out.println(" Operação de I/O de " + processName);
+		System.out.print(" Operação de I/O de " + processName);
 	}
 }
